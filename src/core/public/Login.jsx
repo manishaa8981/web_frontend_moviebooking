@@ -16,7 +16,7 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-900 flex overflow-hidden">
+    <div className="h-screen bg-gray-900 flex overflow-visible">
       {/* Left Side (Illustration) */}
       <div className="hidden md:block md:w-[50%] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center">
         <img
@@ -53,7 +53,7 @@ const Login = () => {
 
           {/* Login Form */}
           <div className="bg-gray-800 rounded-xl p-6 shadow-2xl">
-            <form className="space-y-4">
+            <form className="space-y-4 ">
               {/* Email Input */}
               <div>
                 <label
@@ -153,7 +153,7 @@ const Login = () => {
               <div className="grid grid-cols-2 gap-3 mt-4">
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2 bg-transparent text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                  className="flex items-center justify-center gap-2 bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
                 >
                   <img
                     src={GoogleIcon}
@@ -164,7 +164,7 @@ const Login = () => {
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center gap-2 bg-transparent text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                  className="flex items-center justify-center gap-2 bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
                 >
                   <img
                     src={FacebookIcon}

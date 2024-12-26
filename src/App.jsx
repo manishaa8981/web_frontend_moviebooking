@@ -82,7 +82,7 @@ function App() {
   ];
 
   // logic TODO
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   const routes = isAuthenticated ? privateRoutes : publicRoutes;
   return (
