@@ -6,7 +6,7 @@ const CustomerIndex = lazy(() => import("./core/private/customer"));
 const Home = lazy(() => import("./core/public/Home"));
 const Login = lazy(() => import("./core/public/Login"));
 const Register = lazy(() => import("./core/public/Register"));
-const Layout = lazy(() => import("./core/private/layout"));
+const Layout = lazy(() => import("./core/private/Layout"));
 
 function App() {
   const privateRoutes = [
@@ -17,25 +17,37 @@ function App() {
           <Layout />
         </Suspense>
       ),
-      errorElement:<>Error</>,
-      children:[
+      errorElement: <>Error</>,
+      children: [
         {
-          path:"/admin/customer",
-          element: <Suspense><CustomerIndex/></Suspense>,
-          errorElement:<>Error</>
+          path: "/admin/customer",
+          element: (
+            <Suspense>
+              <CustomerIndex />
+            </Suspense>
+          ),
+          errorElement: <>Error</>,
         },
         {
-          path:"/admin/customer/form",
-          element: <Suspense><CustomerForm/></Suspense>,
-          errorElement:<>Error</>
+          path: "/admin/customer/form",
+          element: (
+            <Suspense>
+              <CustomerForm />
+            </Suspense>
+          ),
+          errorElement: <>Error</>,
         },
         ,
         {
-          path:"/admin/booking",
-          element: <Suspense><BookingIndex/></Suspense>,
-          errorElement:<>Error</>
-        }
-      ]
+          path: "/admin/booking",
+          element: (
+            <Suspense>
+              <BookingIndex />
+            </Suspense>
+          ),
+          errorElement: <>Error</>,
+        },
+      ],
     },
   ];
 
@@ -47,7 +59,7 @@ function App() {
           <Home />
         </Suspense>
       ),
-      errorElement:<>Error</>
+      errorElement: <>Error</>,
     },
     {
       path: "/login",
@@ -56,7 +68,7 @@ function App() {
           <Login />
         </Suspense>
       ),
-      errorElement:<>Error</>
+      errorElement: <>Error</>,
     },
     {
       path: "/register",
@@ -70,7 +82,7 @@ function App() {
   ];
 
   // logic TODO
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const routes = isAuthenticated ? privateRoutes : publicRoutes;
   return (
