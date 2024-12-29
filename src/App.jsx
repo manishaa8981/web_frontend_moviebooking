@@ -6,7 +6,7 @@ const CustomerIndex = lazy(() => import("./core/private/customer"));
 const Home = lazy(() => import("./core/public/Home"));
 const Login = lazy(() => import("./core/public/Login"));
 const Register = lazy(() => import("./core/public/Register"));
-const Layout = lazy(() => import("./core/private/Layout"));
+const AdminPanel = lazy(() => import("./core/private/AdminPanel"));
 
 function App() {
   const privateRoutes = [
@@ -14,7 +14,7 @@ function App() {
       path: "/admin",
       element: (
         <Suspense>
-          <Layout />
+          <AdminPanel />
         </Suspense>
       ),
       errorElement: <>Error</>,

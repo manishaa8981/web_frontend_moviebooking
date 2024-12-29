@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src//*.{js,jsx,ts,tsx}"],
+  content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    color: {
+    colors: {
       orange: {
         50: "#fff7ed",
         100: "#ffedd5",
@@ -14,6 +14,11 @@ export default {
         700: "#c2410c",
         800: "#9a3412",
         900: "#7c2d12",
+      },
+      blue: {
+        800: "#1e40af",
+        900: "#1e3a8a",
+        950: "#172554",
       },
       gray: {
         50: "#F9FAFB",

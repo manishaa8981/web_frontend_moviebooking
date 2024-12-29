@@ -1,9 +1,7 @@
+import { Eye, EyeOff, Lock, Mail, User, X } from "lucide-react";
 import React, { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, User, X } from "lucide-react";
-import FourImage from "./four.jpeg";
-import Logo from "./logo2.png";
-import GoogleIcon from "./google.png"; // Replace with the correct path
-import FacebookIcon from "./facebook.png"; // Replace with the correct path
+import FacebookIcon from "/images/facebook.png"; // Replace with the correct path
+import GoogleIcon from "/images/google.png"; // Replace with the correct path
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,7 +17,7 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-900 flex overflow-hidden">
+    <div className="h-screen bg-gray-900 flex justify-center overflow-hidden">
       {/* Left Side (Illustration) */}
       {/* <div className="hidden md:block md:w-[50%] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center">
         <img
@@ -182,7 +180,7 @@ const Register = () => {
               {/* Sign Up Button */}
               <button
                 type="submit"
-                className="w-full bg-amber-500 text-white py-2.5 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="w-full bg-orange-800 text-white py-2.5 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
               >
                 Sign Up
               </button>

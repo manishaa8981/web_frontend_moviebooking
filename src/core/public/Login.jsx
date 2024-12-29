@@ -1,9 +1,9 @@
+import { Eye, EyeOff, Lock, Mail, X } from "lucide-react";
 import React, { useState } from "react";
-import { Mail, Lock, Eye, EyeOff, X } from "lucide-react";
-import FourImage from "./four.jpeg";
-import Logo from "./logo2.png";
-import GoogleIcon from "./google.png"; // Replace with the correct path
-import FacebookIcon from "./facebook.png"; // Replace with the correct path
+import FacebookIcon from "../../assets/images/facebook.png"; // Replace with the correct path
+import FourImage from "../../assets/images/four.jpeg";
+import GoogleIcon from "../../assets/images/google.png"; // Replace with the correct path
+import Logo from "../../assets/images/logo2.png";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
