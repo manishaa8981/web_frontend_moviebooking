@@ -23,7 +23,7 @@ const Home = () => {
       languages: "Hindi,English",
       genre: "ACTION",
       rating: "A",
-      imageUrl: "/images/movie1.jpeg",
+      imageUrl: "/images/movie1.jpg",
     },
     {
       title: "Mukkam Post Bombilwadi",
@@ -31,7 +31,7 @@ const Home = () => {
       languages: "Marathi",
       genre: "FANTASY",
       rating: "U",
-      imageUrl: "/images/movie1.jpeg",
+      imageUrl: "/images/movie2.jpg",
     },
     {
       title: "Baby John",
@@ -39,7 +39,7 @@ const Home = () => {
       languages: "Hindi",
       genre: "ACTION",
       rating: "UA 16+",
-      imageUrl: "/images/movie1.jpeg",
+      imageUrl: "/images/moviee2.jpg",
     },
     {
       title: "Max",
@@ -47,7 +47,7 @@ const Home = () => {
       languages: "Kannada",
       genre: "ACTION",
       rating: "UA 16+",
-      imageUrl: "/images/movie1.jpeg",
+      imageUrl: "/images/moviee3.jpg",
     },
     {
       title: "Barroz",
@@ -55,12 +55,12 @@ const Home = () => {
       languages: "Malayalam,Hindi",
       genre: "FANTASY",
       rating: "U",
-      imageUrl: "/images/movie1.jpeg",
+      imageUrl: "/images/movie9.jpg",
     },
   ];
 
   const formats = [
-    { id: "imax", image: "/images/movie1.jpeg", alt: "IMAX" },
+    { id: "imax", image: "/images/movie11.jpg", alt: "IMAX" },
     { id: "4dx", image: "/images/movie1.jpeg", alt: "4DX" },
     { id: "mx4d", image: "/images/movie1.jpeg", alt: "MX4D" },
     { id: "screenx", image: "/images/movie1.jpeg", alt: "SCREEN X" },
@@ -107,9 +107,12 @@ const Home = () => {
                 />
               </div>
               <button
-                className={`btn ${
-                  isScrolled ? "btn-primary" : "bg-red-600 text-white"
-                }`}
+                className="btn  bg-orange-400  border-none"
+                // className={`btn  w-25
+                //   ${
+                //   isScrolled ? "btn" : "bg-orange-400 text-white border-none"
+                // }`
+                // }
               >
                 Login
               </button>
@@ -122,13 +125,9 @@ const Home = () => {
       <div className="pt-16">
         {/* Gift Card Banner */}
 
-        <div className="bg-yellow-400 p-8">
+        <div className="border-b-2  p-8">
           <div className="container mx-auto flex items-center justify-between">
-            <img
-              src="/api/placeholder/300/180"
-              alt="Gift Card"
-              className="w-64"
-            />
+            <img src="/images/moviee3.jpg" alt="Gift Card" className="w-64" />
             <div className="max-w-2xl">
               <h2 className="text-4xl font-bold text-red-600 mb-4">
                 IMPORTANT UPDATE
@@ -177,6 +176,7 @@ const Home = () => {
               </div>
             ))}
           </div> */}
+          <h1 className="text-2xl font-bold mb-6 ml-3">Now Showing</h1>
           {/* Movies Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {movies.map((movie, index) => (

@@ -17,31 +17,43 @@ const TrailersPage = () => {
     {
       id: 1,
       title: "New Movie",
-      thumbnail: "/api/placeholder/300/169",
+      thumbnail: "/images/movie11.jpg",
       videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     },
     {
       id: 2,
       title: "Bollywood Movie",
-      thumbnail: "/api/placeholder/300/169",
+      thumbnail: "/images/movie22.jpg",
       videoUrl: "https://www.youtube.com/embed/VIDEO_ID_2",
     },
     {
       id: 3,
       title: "John",
-      thumbnail: "/api/placeholder/300/169",
+      thumbnail: "/images/movie33.jpg",
       videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
     },
     {
       id: 4,
       title: "Ruthless Hunter",
-      thumbnail: "/api/placeholder/300/169",
+      thumbnail: "/images/movie44.jpg",
       videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
     },
     {
       id: 5,
       title: "Park",
-      thumbnail: "/api/placeholder/300/169",
+      thumbnail: "/images/movie55.jpg",
+      videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
+    },
+    {
+      id: 6,
+      title: "Park",
+      thumbnail: "/images/movie66.jpg",
+      videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
+    },
+    {
+      id: 7,
+      title: "Park",
+      thumbnail: "/images/movie77.jpg",
       videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
     },
   ];
@@ -63,7 +75,7 @@ const TrailersPage = () => {
         {/* Main Featured Trailer */}
         <div className="relative w-full h-[500px] mb-8 rounded-lg overflow-hidden group">
           <img
-            src="/api/placeholder/1200/500"
+            src="/images/movie77.jpg"
             alt={selectedMovie.title}
             className="w-full h-full object-cover"
           />
