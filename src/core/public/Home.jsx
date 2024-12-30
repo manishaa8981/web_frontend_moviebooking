@@ -1,167 +1,237 @@
-import { Menu, Search, X } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Logo from "../../assets/images/logo2.png";
-import { Button } from "../../components/Button";
-import HeroCarousel from "./HeroSection";
+import { Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import TrailersPage from "./MovieTrailersSection";
+import Logo from "/images/logo2.png";
 
 const Home = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const navigate = useNavigate();
+  // Scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // Adjust the scroll threshold as needed
+    };
 
-  const handleSignupClick = () => {
-    navigate("/login");
-  };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const movies = [
     {
-      title: "Inception",
-      rating: "8.8",
-      genre: "Sci-Fi",
-      duration: "2h 28m",
+      title: "Kraven The Hunter",
+      releaseDate: "Wed Jan 01",
+      languages: "Hindi,English",
+      genre: "ACTION",
+      rating: "A",
+      imageUrl: "/images/movie1.jpeg",
     },
     {
-      title: "The Dark Knight",
-      rating: "9.0",
-      genre: "Action",
-      duration: "2h 32m",
+      title: "Mukkam Post Bombilwadi",
+      releaseDate: "Wed Jan 01",
+      languages: "Marathi",
+      genre: "FANTASY",
+      rating: "U",
+      imageUrl: "/images/movie1.jpeg",
     },
     {
-      title: "Interstellar",
-      rating: "8.6",
-      genre: "Adventure",
-      duration: "2h 49m",
+      title: "Baby John",
+      releaseDate: "New Release",
+      languages: "Hindi",
+      genre: "ACTION",
+      rating: "UA 16+",
+      imageUrl: "/images/movie1.jpeg",
+    },
+    {
+      title: "Max",
+      releaseDate: "New Release",
+      languages: "Kannada",
+      genre: "ACTION",
+      rating: "UA 16+",
+      imageUrl: "/images/movie1.jpeg",
+    },
+    {
+      title: "Barroz",
+      releaseDate: "New Release",
+      languages: "Malayalam,Hindi",
+      genre: "FANTASY",
+      rating: "U",
+      imageUrl: "/images/movie1.jpeg",
     },
   ];
 
+  const formats = [
+    { id: "imax", image: "/images/movie1.jpeg", alt: "IMAX" },
+    { id: "4dx", image: "/images/movie1.jpeg", alt: "4DX" },
+    { id: "mx4d", image: "/images/movie1.jpeg", alt: "MX4D" },
+    { id: "screenx", image: "/images/movie1.jpeg", alt: "SCREEN X" },
+    { id: "playhouse", image: "/images/movie1.jpeg", alt: "PLAYHOUSE" },
+    { id: "laser", image: "/images/movie1.jpeg", alt: "LASER" },
+  ];
+
   return (
-    <div className="min-h-screen">
-      {/* Background Image with Overlay */}
-      <div className="fixed inset-0 z-0 bg-gray-900">
-        <div className="absolute inset-0 bg-black/50" /> {/* Dark overlay */}
-      </div>
-
-      {/* Navbar */}
-      <nav className="fixed w-full z-50 bg-black/20 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-start">
-              {/* <Film className="h-8 w-8 text-red-500" /> */}
-              <img src={Logo} alt="Logo" className=" h-10  shadow-lg" />
+    <div className="min-h-screen bg-base-200">
+      {/* Header */}
+      <header
+        className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
+          isScrolled
+            ? "bg-white text-black shadow-md"
+            : "bg-blue-950 text-white"
+        }`}
+      >
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <img src={Logo} alt="Logo" className=" h-10 " />
+              </div>
+              <nav className="hidden md:flex space-x-4">
+                <button className="btn btn-ghost">Home</button>
+                <button className="btn btn-ghost">Showtimings</button>
+                <button className="btn btn-ghost">Cinemas</button>
+                <button className="btn btn-ghost">Offers</button>
+              </nav>
             </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-white hover:text-red-500 transition">
-                Now Showing
-              </a>
-              <a href="#" className="text-white hover:text-red-500 transition">
-                Coming Soon
-              </a>
-              <a href="#" className="text-white hover:text-red-500 transition">
-                Cinemas
-              </a>
-              <Button className="bg-red-500 hover:bg-red-600">Sign In</Button>
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  className={`input input-bordered w-64 ${
+                    isScrolled ? "bg-gray-200" : "bg-gray-700 text-white"
+                  }`}
+                />
+                <Search
+                  className={`absolute right-3 top-3 h-4 w-10 ${
+                    isScrolled ? "text-gray-600" : "text-gray-400"
+                  }`}
+                />
+              </div>
+              <button
+                className={`btn ${
+                  isScrolled ? "btn-primary" : "bg-red-600 text-white"
+                }`}
+              >
+                Login
+              </button>
             </div>
-
-            {/* Mobile menu button */}
-            <button
-              className="md:hidden text-white"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
           </div>
         </div>
+      </header>
 
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-black/95 backdrop-blur-lg">
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              <a
-                href="#"
-                className="block px-3 py-2 text-white hover:bg-red-500/20 rounded-lg"
-              >
-                Now Showing
-              </a>
-              <a
-                href="#"
-                className="block px-3 py-2 text-white hover:bg-red-500/20 rounded-lg"
-              >
-                Coming Soon
-              </a>
-              <a
-                href="#"
-                className="block px-3 py-2 text-white hover:bg-red-500/20 rounded-lg"
-              >
-                Cinemas
-              </a>
-              <Button
-                onClick={handleSignupClick}
-                className="w-full bg-red-500 hover:bg-red-600 mt-4"
-              >
-                Sign In
-              </Button>
-            </div>
-          </div>
-        )}
-      </nav>
+      {/* Main Content */}
+      <div className="pt-16">
+        {/* Gift Card Banner */}
 
-      {/* Hero Section */}
-      <main className="relative z-10 pt-32 pb-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <HeroCarousel />
-
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto relative">
-            <input
-              type="text"
-              placeholder="Search for movies..."
-              className="w-full px-6 py-4 rounded-full bg-white/10 backdrop-blur-md text-white border border-white/20 focus:outline-none focus:border-red-500 pl-12"
+        <div className="bg-yellow-400 p-8">
+          <div className="container mx-auto flex items-center justify-between">
+            <img
+              src="/api/placeholder/300/180"
+              alt="Gift Card"
+              className="w-64"
             />
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <div className="max-w-2xl">
+              <h2 className="text-4xl font-bold text-red-600 mb-4">
+                IMPORTANT UPDATE
+              </h2>
+              <p className="text-xl font-semibold mb-2">
+                YOU CAN NOW REDEEM YOUR GIFT CARDS ONLINE AND PHYSICALLY AT
+                CINEMAS.
+              </p>
+              <p className="text-lg mb-2">
+                ONLINE PURCHASE WILL RESUME SHORTLY.
+              </p>
+              <p className="text-base">
+                FOR IMMEDIATE ASSISTANCE, PLEASE CONTACT OUR CUSTOMER EXPERIENCE
+                CENTRE +91 8800900009
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Now Showing Section */}
-        <div className="max-w-7xl mx-auto mt-20">
-          <h2 className="text-2xl font-bold text-white mb-8">Now Showing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Quick Book */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex space-x-4 mb-8">
+            <select className="select select-bordered w-full max-w-xs">
+              <option>Select Movie</option>
+            </select>
+            <select className="select select-bordered w-full max-w-xs">
+              <option>Select Date</option>
+            </select>
+            <select className="select select-bordered w-full max-w-xs">
+              <option>Select Cinema</option>
+            </select>
+            <select className="select select-bordered w-full max-w-xs">
+              <option>Select Timing</option>
+            </select>
+            <button className="btn btn-warning bg-orange-400">Book</button>
+          </div>
+          {/* Format Icons */}
+          {/* <div className="flex space-x-4 mb-8 overflow-x-auto">
+            {formats.map((format) => (
+              <div key={format.id} className="shrink-0">
+                <img
+                  src={format.image}
+                  alt={format.alt}
+                  className="h-10 w-20 object-contain"
+                />
+              </div>
+            ))}
+          </div> */}
+          {/* Movies Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {movies.map((movie, index) => (
               <div
                 key={index}
-                className="bg-black/30 backdrop-blur-md rounded-xl overflow-hidden hover:transform hover:scale-105 transition duration-300"
+                className="group relative bg-white rounded-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
-                <img
-                  src={`/api/placeholder/400/225`}
-                  alt={movie.title}
-                  className="w-full h-48 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    {movie.title}
-                  </h3>
-                  <div className="flex items-center justify-between text-gray-300 text-sm mb-4">
-                    <span>⭐ {movie.rating}</span>
-                    <span>{movie.genre}</span>
-                    <span>{movie.duration}</span>
+                {/* Image Container */}
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={movie.imageUrl}
+                    alt={movie.title}
+                    className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+                </div>
+
+                {/* Content Container */}
+                <div className="p-3 space-y-2">
+                  {/* Release Date Badge */}
+                  <div className="flex items-center justify-between">
+                    <span className="px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-700 rounded-full">
+                      {movie.releaseDate}
+                    </span>
+                    <span className="px-2 py-1 text-xs font-semibold bg-purple-100 text-purple-700 rounded-full">
+                      {movie.rating}
+                    </span>
                   </div>
-                  <Button className="w-full bg-red-500 hover:bg-red-600">
+
+                  {/* Title */}
+                  <h2 className="font-bold text-gray-800 line-clamp-1 group-hover:text-yellow-600 transition-colors">
+                    {movie.title}
+                  </h2>
+
+                  {/* Languages */}
+                  <p className="text-xs text-gray-500">{movie.languages}</p>
+
+                  {/* Genre Badge */}
+                  <div className="flex items-center space-x-2">
+                    <span className="px-2 py-1 text-xs border border-gray-300 rounded-full text-gray-600">
+                      {movie.genre}
+                    </span>
+                  </div>
+
+                  {/* Book Button */}
+                  <button className="w-full py-2 mt-2 text-sm font-semibold text-white bg-orange-400 rounded-lg transition-all duration-300 hover:bg-orange-600 hover:shadow-md transform hover:-translate-y-0.5">
                     Book Now
-                  </Button>
+                  </button>
                 </div>
               </div>
             ))}
           </div>
+          <TrailersPage />
         </div>
-      </main>
+      </div>
     </div>
   );
 };

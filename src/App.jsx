@@ -78,11 +78,12 @@ function App() {
         </Suspense>
       ),
     },
+    
     { path: "*", element: <>unauthorized</> },
   ];
 
   // logic TODO
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const routes = isAuthenticated ? privateRoutes : publicRoutes;
   return (
