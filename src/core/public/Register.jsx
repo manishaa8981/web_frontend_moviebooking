@@ -180,7 +180,7 @@ const Register = () => {
               {/* Sign Up Button */}
               <button
                 type="submit"
-                className="w-full bg-orange-800 text-white py-2.5 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                className="w-full bg-orange-500 text-white py-2.5 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
               >
                 Sign Up
               </button>

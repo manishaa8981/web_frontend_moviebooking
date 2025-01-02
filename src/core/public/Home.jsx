@@ -97,12 +97,12 @@ const Home = () => {
                   type="text"
                   placeholder="Search..."
                   className={`input input-bordered w-64 ${
-                    isScrolled ? "bg-gray-200" : "bg-gray-700 text-white"
+                    isScrolled ? "bg-gray-200" : "bg-gray-400 text-white"
                   }`}
                 />
                 <Search
                   className={`absolute right-3 top-3 h-4 w-10 ${
-                    isScrolled ? "text-gray-600" : "text-gray-400"
+                    isScrolled ? "text-gray-300" : "text-gray-100"
                   }`}
                 />
               </div>

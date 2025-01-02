@@ -7,6 +7,7 @@ import {
   Users,
 } from "lucide-react";
 import React, { useState } from "react";
+import Logo from "/images/logo2.png";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Movies & Showtimes");
@@ -28,7 +29,9 @@ const AdminPanel = () => {
       {/* Navbar */}
       <nav className="bg-blue-950 text-white p-4 fixed w-full z-10 rounded-lg">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-bold">MovieTix Admin</h1>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <img src={Logo} alt="Logo" className=" h-10  shadow-lg" />
+          </div>{" "}
           <button
             onClick={handleSignOut}
             className="flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition"

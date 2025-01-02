@@ -1,5 +1,6 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AdminLoginContext } from "./context/AdminLoginContext";
 const BookingIndex = lazy(() => import("./core/private/booking"));
 const CustomerForm = lazy(() => import("./core/private/customer/form"));
 const CustomerIndex = lazy(() => import("./core/private/customer"));
@@ -78,14 +79,16 @@ function App() {
         </Suspense>
       ),
     },
-    
+
     { path: "*", element: <>unauthorized</> },
   ];
 
-  // logic TODO
-  const isAuthenticated = false;
+  const { isAdminLoggedIn } = useContext(AdminLoginContext);
 
-  const routes = isAuthenticated ? privateRoutes : publicRoutes;
+  let routes = publicRoutes;
+  if (isAdminLoggedIn) {
+    routes = privateRoutes;
+  }
   return (
     <>
       <RouterProvider router={createBrowserRouter(routes)} />
