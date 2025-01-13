@@ -1,9 +1,12 @@
 import { Eye, EyeOff, Lock, Mail, User, X } from "lucide-react";
 import React, { useState } from "react";
-import FacebookIcon from "/images/facebook.png"; // Replace with the correct path
-import GoogleIcon from "/images/google.png"; // Replace with the correct path
+import { useNavigate } from "react-router-dom";
+import FacebookIcon from "/images/facebook.png";
+import FourImage from "/images/four.jpeg";
+import GoogleIcon from "/images/google.png";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [name, setName] = useState("");
@@ -11,27 +14,22 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleClose = () => {
-    console.log("Close button clicked");
-    // Add navigation logic, e.g., redirecting to the homepage
-  };
-
   return (
     <div className="h-screen bg-gray-900 flex justify-center overflow-hidden">
       {/* Left Side (Illustration) */}
-      {/* <div className="hidden md:block md:w-[50%] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center">
+      <div className="hidden md:block md:w-[50%] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center">
         <img
           src={FourImage}
           alt="Theater Illustration"
-          className="rounded-lg shadow-lg"
+          className="rounded-lg shadow-lg h-fit w-full"
         />
-      </div> */}
+      </div>
 
       {/* Right Side (Sign-Up Form) */}
       <div className="w-full md:w-[50%] flex items-center justify-center p-6 relative">
         {/* Close Button */}
         <button
-          onClick={handleClose}
+          onClick={() => navigate("/")}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-300 transition-colors"
           aria-label="Close"
         >
@@ -215,7 +213,10 @@ const Register = () => {
             {/* Sign In Link */}
             <p className="mt-6 text-center text-sm text-gray-400">
               Already have an account?{" "}
-              <button className="text-amber-500 hover:text-amber-400 font-medium transition-colors">
+              <button
+                onClick={() => navigate("/Login")}
+                className="text-amber-500 hover:text-amber-400 font-medium transition-colors"
+              >
                 Sign in
               </button>
             </p>

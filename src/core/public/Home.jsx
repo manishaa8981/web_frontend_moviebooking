@@ -1,9 +1,10 @@
 import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import TrailersPage from "./MovieTrailersSection";
 import Logo from "/images/logo2.png";
-
 const Home = () => {
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Scroll detection
@@ -108,6 +109,7 @@ const Home = () => {
               </div>
               <button
                 className="btn  bg-orange-400  border-none"
+                onClick={() => navigate("/Login")} // Navigate to Login Page
                 // className={`btn  w-25
                 //   ${
                 //   isScrolled ? "btn" : "bg-orange-400 text-white border-none"

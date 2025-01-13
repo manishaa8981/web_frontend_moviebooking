@@ -1,5 +1,8 @@
-import { ChevronLeft, ChevronRight, Play, X } from "lucide-react";
+import { Play, X } from "lucide-react";
 import React, { useState } from "react";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 
 const TrailersPage = () => {
   const [selectedMovie, setSelectedMovie] = useState({
@@ -8,7 +11,7 @@ const TrailersPage = () => {
     date: "Wednesday, Jan 1, 2025",
     languages: "Hindi,English",
     genres: ["ACTION", "ADVENTURE"],
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Example YouTube link
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   });
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -57,6 +60,39 @@ const TrailersPage = () => {
       videoUrl: "https://www.youtube.com/embed/VIDEO_ID_3",
     },
   ];
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 relative">
@@ -109,41 +145,31 @@ const TrailersPage = () => {
           </div>
         </div>
 
-        {/* Trailer Thumbnails */}
-        <div className="relative">
-          <div className="flex gap-4 overflow-x-auto pb-4">
-            {trailers.map((trailer) => (
-              <div
-                key={trailer.id}
-                className="relative flex-shrink-0 w-64 group cursor-pointer"
-                onClick={() =>
-                  setSelectedMovie({
-                    ...selectedMovie,
-                    title: trailer.title,
-                    videoUrl: trailer.videoUrl,
-                  })
-                }
-              >
-                <img
-                  src={trailer.thumbnail}
-                  alt={trailer.title}
-                  className="w-full h-36 object-cover rounded-lg"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
-                  <Play className="w-12 h-12 text-white" />
-                </div>
+        {/* Trailer Thumbnails Slider */}
+        <Slider {...sliderSettings}>
+          {trailers.map((trailer) => (
+            <div
+              key={trailer.id}
+              className="relative group cursor-pointer px-2"
+              onClick={() =>
+                setSelectedMovie({
+                  ...selectedMovie,
+                  title: trailer.title,
+                  videoUrl: trailer.videoUrl,
+                })
+              }
+            >
+              <img
+                src={trailer.thumbnail}
+                alt={trailer.title}
+                className="w-full h-36 object-cover rounded-lg"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
+                <Play className="w-12 h-12 text-white" />
               </div>
-            ))}
-          </div>
-
-          {/* Navigation Arrows */}
-          <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg">
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          <button className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg">
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
+            </div>
+          ))}
+        </Slider>
       </div>
 
       {/* Video Overlay */}
