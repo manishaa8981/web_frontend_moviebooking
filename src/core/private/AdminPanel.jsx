@@ -1,16 +1,28 @@
 import {
   BarChart,
+  Box,
+  BoxIcon,
   Calendar,
   Film,
   LogOut,
+  MoveIcon,
   Settings,
   Users,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { AdminLoginContext } from "../../context/AdminLoginContext";
+import HallAdminPanel from "./Hall";
+import MovieAdminPanel from "./Movie";
+import SeatAdminPanel from "./Seat";
 import Logo from "/images/logo2.png";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("Movies & Showtimes");
+  const { setIsAdminLoggedIn } = useContext(AdminLoginContext); // Access the admin login state
+
+  const navigate = useNavigate();
 
   const tabs = [
     { name: "Movies & Showtimes", icon: Film },
@@ -18,16 +30,30 @@ const AdminPanel = () => {
     { name: "Screening Schedule", icon: Calendar },
     { name: "Analytics", icon: BarChart },
     { name: "Settings", icon: Settings },
+    { name: "Movie", icon: MoveIcon },
+    { name: "Hall", icon: Box },
+    { name: "Seat", icon: BoxIcon },
   ];
 
   const handleSignOut = () => {
     console.log("Signing out...");
+
+    setIsAdminLoggedIn(false);
+    // Clear token and role from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
+    // Redirect to the home page (or any other page you want)
+    navigate("/");
+
+    // Optionally, add a message to inform the user (e.g., a toast or alert)
+    alert("You have been signed out!");
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
-      <nav className="bg-blue-950 text-white p-4 fixed w-full z-10 rounded-lg">
+      <nav className="bg-gray-800 text-white p-4 fixed w-full z-10 ">
         <div className="flex justify-between items-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <img src={Logo} alt="Logo" className=" h-10  shadow-lg" />
@@ -44,7 +70,7 @@ const AdminPanel = () => {
 
       <div className="flex pt-16 rounded-lg">
         {/* Sidebar */}
-        <div className="w-64 bg-blue-950 text-white min-h-screen fixed ">
+        <div className="w-64 mt-6 bg-gray-600 text-gray-300 min-h-screen fixed ">
           <div className="space-y-2 p-4">
             {tabs.map((tab, index) => {
               const isActive = activeTab === tab.name;
@@ -55,14 +81,14 @@ const AdminPanel = () => {
                   key={index}
                   className={`flex items-center px-4 py-3 w-full text-left rounded-lg transition ${
                     isActive
-                      ? "bg-indigo-600 text-white shadow-lg"
-                      : "hover:bg-indigo-800 text-indigo-100"
+                      ? "bg-orange-400 text-white shadow-lg"
+                      : "hover:bg-orange-400 text-white-100"
                   }`}
                   onClick={() => setActiveTab(tab.name)}
                 >
                   <Icon
                     className={`mr-3 h-5 w-5 transition-transform ${
-                      isActive ? "text-white scale-110" : "text-indigo-300"
+                      isActive ? "text-gray scale-110" : "text-gray-300"
                     }`}
                   />
                   {tab.name}
@@ -162,6 +188,9 @@ const AdminPanel = () => {
               </div>
             </div>
           )}
+          {activeTab === "Movie" && <MovieAdminPanel />}
+          {activeTab === "Hall" && <HallAdminPanel />}
+          {activeTab === "Seat" && <SeatAdminPanel />}
         </div>
       </div>
     </div>
