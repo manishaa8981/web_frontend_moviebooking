@@ -1,8 +1,10 @@
-import { Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TrailersPage from "./MovieTrailersSection";
-import Logo from "/images/logo2.png";
+import Navbar from "../../components/NavBar";
+import HeroCarousel from "./HeroSection";
+import MovieDescription from "./MovieDescription";
+import TheaterSeats from "./Seat";
+import TrailersPlaying from "./TrailerPlaying";
 const Home = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,94 +62,12 @@ const Home = () => {
     },
   ];
 
-  const formats = [
-    { id: "imax", image: "/images/movie11.jpg", alt: "IMAX" },
-    { id: "4dx", image: "/images/movie1.jpeg", alt: "4DX" },
-    { id: "mx4d", image: "/images/movie1.jpeg", alt: "MX4D" },
-    { id: "screenx", image: "/images/movie1.jpeg", alt: "SCREEN X" },
-    { id: "playhouse", image: "/images/movie1.jpeg", alt: "PLAYHOUSE" },
-    { id: "laser", image: "/images/movie1.jpeg", alt: "LASER" },
-  ];
-
   return (
     <div className="min-h-screen bg-base-200">
-      {/* Header */}
-      <header
-        className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
-          isScrolled
-            ? "bg-white text-black shadow-md"
-            : "bg-blue-950 text-white"
-        }`}
-      >
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <img src={Logo} alt="Logo" className=" h-10 " />
-              </div>
-              <nav className="hidden md:flex space-x-4">
-                <button className="btn btn-ghost">Home</button>
-                <button className="btn btn-ghost">Showtimings</button>
-                <button className="btn btn-ghost">Cinemas</button>
-                <button className="btn btn-ghost">Offers</button>
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className={`input input-bordered w-64 ${
-                    isScrolled ? "bg-gray-200" : "bg-gray-400 text-white"
-                  }`}
-                />
-                <Search
-                  className={`absolute right-3 top-3 h-4 w-10 ${
-                    isScrolled ? "text-gray-300" : "text-gray-100"
-                  }`}
-                />
-              </div>
-              <button
-                className="btn  bg-orange-400  border-none"
-                onClick={() => navigate("/Login")} // Navigate to Login Page
-                // className={`btn  w-25
-                //   ${
-                //   isScrolled ? "btn" : "bg-orange-400 text-white border-none"
-                // }`
-                // }
-              >
-                Login
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
-      {/* Main Content */}
       <div className="pt-16">
-        {/* Gift Card Banner */}
-
-        <div className="border-b-2  p-8">
-          <div className="container mx-auto flex items-center justify-between">
-            <img src="/images/moviee3.jpg" alt="Gift Card" className="w-64" />
-            <div className="max-w-2xl">
-              <h2 className="text-4xl font-bold text-red-600 mb-4">
-                IMPORTANT UPDATE
-              </h2>
-              <p className="text-xl font-semibold mb-2">
-                YOU CAN NOW REDEEM YOUR GIFT CARDS ONLINE AND PHYSICALLY AT
-                CINEMAS.
-              </p>
-              <p className="text-lg mb-2">
-                ONLINE PURCHASE WILL RESUME SHORTLY.
-              </p>
-              <p className="text-base">
-                FOR IMMEDIATE ASSISTANCE, PLEASE CONTACT OUR CUSTOMER EXPERIENCE
-                CENTRE +91 8800900009
-              </p>
-            </div>
-          </div>
-        </div>
+        <HeroCarousel />
 
         {/* Quick Book */}
         <div className="container mx-auto px-4 py-6">
@@ -166,18 +86,7 @@ const Home = () => {
             </select>
             <button className="btn btn-warning bg-orange-400">Book</button>
           </div>
-          {/* Format Icons */}
-          {/* <div className="flex space-x-4 mb-8 overflow-x-auto">
-            {formats.map((format) => (
-              <div key={format.id} className="shrink-0">
-                <img
-                  src={format.image}
-                  alt={format.alt}
-                  className="h-10 w-20 object-contain"
-                />
-              </div>
-            ))}
-          </div> */}
+
           <h1 className="text-2xl font-bold mb-6 ml-3">Now Showing</h1>
           {/* Movies Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -231,7 +140,10 @@ const Home = () => {
               </div>
             ))}
           </div>
-          <TrailersPage />
+
+          <TrailersPlaying />
+          <TheaterSeats />
+          <MovieDescription />
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
-import { ChevronLeft, ChevronRight, Play } from "lucide-react";
-import React, { useState } from "react";
-import Movie1 from "../../assets/images/four.jpeg";
-import { Button } from "../../components/Button";
-
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useRef } from "react";
+import Slider from "react-slick";
+import Movie2 from "/images/movie2.jpg";
+import Movie1 from "/images/movie22.jpg";
 const HeroCarousel = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const sliderRef = useRef(null);
 
   const movies = [
     {
@@ -15,6 +15,7 @@ const HeroCarousel = () => {
       rating: "8.8",
       duration: "2h 28m",
       genre: "Sci-Fi",
+      imageUrl: "/images/movie2.jpg",
     },
     {
       title: "The Dark Knight",
@@ -24,6 +25,7 @@ const HeroCarousel = () => {
       rating: "9.0",
       duration: "2h 32m",
       genre: "Action",
+      imageUrl: "/images/movie22.jpg",
     },
     {
       title: "Interstellar",
@@ -36,39 +38,38 @@ const HeroCarousel = () => {
     },
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % movies.length);
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    arrows: false, // Disable built-in arrows
   };
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + movies.length) % movies.length);
-  };
+  const handlePrev = () => sliderRef.current.slickPrev();
+  const handleNext = () => sliderRef.current.slickNext();
 
   return (
-    <div className="relative h-[80vh] overflow-hidden">
+    <div className="relative h-[40vh] overflow-hidden">
       {/* Carousel Container */}
-      <div className="relative h-full">
+      <Slider {...sliderSettings} ref={sliderRef} className="relative h-full">
         {movies.map((movie, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-500 ${
-              currentSlide === index
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
-            }`}
-          >
+          <div key={index} className="relative h-full">
             {/* Background Image with Gradient */}
             <div className="absolute inset-0">
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent " />
               <img
-                src={Movie1}
+                src={(Movie1, Movie2)}
                 alt={movie.title}
                 className="w-full h-full object-cover"
               />
             </div>
 
             {/* Content */}
-            <div className="relative z-20 h-full flex items-center">
+            <div className="relative  h-full flex items-center">
               <div className="container mx-auto px-4">
                 <div className="max-w-2xl">
                   {/* Movie Info */}
@@ -86,55 +87,26 @@ const HeroCarousel = () => {
                   <p className="text-gray-300 mb-8 line-clamp-3">
                     {movie.description}
                   </p>
-
-                  {/* Buttons */}
-                  <div className="flex gap-4">
-                    <Button className="bg-red-500 hover:bg-red-600 text-white px-8">
-                      Book Now
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="border-white text-white hover:bg-white/10"
-                    >
-                      <Play className="w-4 h-4 mr-2" />
-                      Watch Trailer
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         ))}
-      </div>
+      </Slider>
 
       {/* Navigation Arrows */}
       <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white p-2 rounded-full bg-black/30 hover:bg-black/50 transition"
+        onClick={handlePrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 rounded-full bg-black/30 hover:bg-black/50 transition"
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
       <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white p-2 rounded-full bg-black/30 hover:bg-black/50 transition"
+        onClick={handleNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2  text-white p-2 rounded-full bg-black/30 hover:bg-black/50 transition"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
-
-      {/* Carousel Indicators */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
-        {movies.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              currentSlide === index
-                ? "w-8 bg-red-500"
-                : "bg-white/50 hover:bg-white"
-            }`}
-          />
-        ))}
-      </div>
     </div>
   );
 };
