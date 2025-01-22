@@ -15,7 +15,7 @@ const HeroCarousel = () => {
       rating: "8.8",
       duration: "2h 28m",
       genre: "Sci-Fi",
-      imageUrl: "/images/movie2.jpg",
+      // imageUrl: "/images/movie2.jpg",
     },
     {
       title: "The Dark Knight",
@@ -25,7 +25,7 @@ const HeroCarousel = () => {
       rating: "9.0",
       duration: "2h 32m",
       genre: "Action",
-      imageUrl: "/images/movie22.jpg",
+      // imageUrl: "/images/movie22.jpg",
     },
     {
       title: "Interstellar",

@@ -100,7 +100,9 @@
 
 import { lazy, Suspense, useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import MovieCard from "./components/MovieCard";
 import { AdminLoginContext } from "./context/AdminLoginContext";
+import MovieDescription from "./core/public/MovieDescription";
 
 const BookingIndex = lazy(() => import("./core/private/booking"));
 const CustomerForm = lazy(() => import("./core/private/customer/form"));
@@ -179,6 +181,22 @@ function App() {
       element: (
         <Suspense>
           <Register />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/movie",
+      element: (
+        <Suspense>
+          <MovieCard />
+        </Suspense>
+      ),
+    },
+    {
+      path: "/movie/:id",
+      element: (
+        <Suspense>
+          <MovieDescription />
         </Suspense>
       ),
     },

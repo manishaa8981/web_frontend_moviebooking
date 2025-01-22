@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import MovieCard from "../../components/MovieCard";
 import Navbar from "../../components/NavBar";
 import HeroCarousel from "./HeroSection";
 import MovieDescription from "./MovieDescription";
 import TheaterSeats from "./Seat";
 import TrailersPlaying from "./TrailerPlaying";
+import SeatBooking from "./demoseat";
 const Home = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,7 +65,8 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-base-200">
+    <div className="min-h-screen bg-gray-700">
+      {/* <div className="min-h-screen bg-base-200">  */}
       <Navbar />
 
       <div className="pt-16">
@@ -140,10 +143,11 @@ const Home = () => {
               </div>
             ))}
           </div>
-
+          <MovieCard />
           <TrailersPlaying />
           <TheaterSeats />
           <MovieDescription />
+          <SeatBooking />
         </div>
       </div>
     </div>

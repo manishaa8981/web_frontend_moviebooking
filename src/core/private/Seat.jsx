@@ -41,39 +41,43 @@ const SeatAdminPanel = () => {
   // Handle seat submission (add or update)
   const handleSaveSeat = async (seatData) => {
     try {
+      console.log("Sending payload:", seatData);
+
       const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
       };
 
       if (seatData.id) {
-        // Update seat
         await axios.put(
           `http://localhost:4011/api/seat/${seatData.id}`,
           seatData,
-          {
-            headers,
-          }
+          { headers }
         );
       } else {
-        // Add new seat
         await axios.post("http://localhost:4011/api/seat/save", seatData, {
           headers,
         });
       }
+
       fetchSeats();
       setIsModalOpen(false);
     } catch (error) {
-      console.error("Error saving seat:", error);
-      alert(`Error: ${error.response?.data?.message || "Unable to save seat"}`);
+      console.error("Error saving seat:", error.response?.data || error);
+      alert(
+        `Error: ${
+          error.response?.data?.message ||
+          "Unable to save seat. Please check the input data."
+        }`
+      );
     }
   };
 
   // Handle seat deletion
   const handleDeleteSeat = async (id) => {
     try {
-      const token = localStorage.getItem("authToken");
-      await axios.delete(`http://localhost:4011/api/seats/${id}`, {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:4011/api/seat/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchSeats();
@@ -116,6 +120,7 @@ const SeatAdminPanel = () => {
       accessorKey: "hallId",
       cell: ({ row }) => {
         const hall = halls.find((h) => h._id === row.original.hallId);
+
         return hall ? hall.hall_name : "Not assigned";
       },
     },

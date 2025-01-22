@@ -52,6 +52,7 @@ const HallAdminPanel = () => {
   // Handle hall submission (add or update)
   const handleSaveHall = async (hall) => {
     try {
+      console.log("Hall data being sent:", hall);
       const token = localStorage.getItem("token");
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -71,8 +72,11 @@ const HallAdminPanel = () => {
       fetchHalls();
       setIsModalOpen(false);
     } catch (error) {
-      console.error("Error saving hall:", error);
-      alert(`Error: ${error.response?.data?.message || "Unable to save hall"}`);
+      console.error(
+        "Error saving hall:",
+        error.response?.data || error.message
+      );
+      alert(`Error: ${error.response?.data?.error || "Unable to save hall"}`);
     }
   };
 
@@ -372,7 +376,7 @@ const HallAdminPanel = () => {
                     <option value="">Select Seat Config</option>
                     {seats.map((seat) => (
                       <option key={seat._id} value={seat._id}>
-                        {seat.name || `Configuration ${seat._id}`}
+                        {seat.seat_number}
                       </option>
                     ))}
                   </select>

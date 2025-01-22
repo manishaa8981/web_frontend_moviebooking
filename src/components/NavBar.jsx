@@ -20,9 +20,13 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
-        isScrolled ? "bg-white text-black shadow-md" : "bg-gray-800 text-white"
-      }`}
+      className={`fixed top-0 w-full z-50 transition-colors duration-300  relative;
+   ${
+     isScrolled
+       ? "bg-gray-800 text-white shadow-md"
+       : "bg-transparent text-black"
+     // isScrolled ? "bg-white text-black shadow-md" : "bg-gray-800 text-white"
+   }`}
     >
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
@@ -45,12 +49,14 @@ const Navbar = () => {
                 type="text"
                 placeholder="Search..."
                 className={`input input-bordered w-64 ${
-                  isScrolled ? "bg-gray-200" : "bg-gray-400 text-white"
+                  // isScrolled ? "bg-gray-200" : "bg-gray-400 text-white"
+                  isScrolled ? "text-white" : "bg-gray-400 text-white"
                 }`}
               />
               <Search
                 className={`absolute right-3 top-3 h-4 w-10 ${
-                  isScrolled ? "text-gray-300" : "text-gray-100"
+                  isScrolled ? "text-gray-300" : "text-white "
+                  // isScrolled ? "text-gray-300" : "text-gray-100"
                 }`}
               />
             </div>

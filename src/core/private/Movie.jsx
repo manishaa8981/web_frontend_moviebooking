@@ -164,6 +164,23 @@ const MovieAdminPanel = () => {
 
   const columns = [
     {
+      header: "Movie Image",
+      accessorKey: "movie_image",
+      cell: ({ row }) => (
+        <div className="flex justify-center">
+          {row.original.movie_image ? (
+            <img
+              src={row.original.movie_image}
+              alt="Movie"
+              className="w-24 h-24 object-cover rounded"
+            />
+          ) : (
+            <span>No Image</span>
+          )}
+        </div>
+      ),
+    },
+    {
       header: "Movie Info",
       accessorKey: "movie_name",
       cell: ({ row }) => (
@@ -377,13 +394,39 @@ const MovieAdminPanel = () => {
                   <label className="label">
                     <span className="label-text">Genre</span>
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="genre"
-                    className="input input-bordered"
-                    defaultValue={currentMovie?.genre}
+                    className="select select-bordered"
+                    defaultValue={currentMovie?.genre || ""}
                     required
-                  />
+                  >
+                    <option value="">Select Genre</option>
+                    {[
+                      "Action",
+                      "Adventure",
+                      "Comedy",
+                      "Drama",
+                      "Horror",
+                      "Science Fiction (Sci-Fi)",
+                      "Fantasy",
+                      "Mystery",
+                      "Thriller",
+                      "Romance",
+                      "Documentary",
+                      "Musical",
+                      "Animation",
+                      "Crime",
+                      "Family",
+                      "History",
+                      "War",
+                      "Western",
+                      "Slice of Life",
+                    ].map((genre) => (
+                      <option key={genre} value={genre}>
+                        {genre}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="form-control">

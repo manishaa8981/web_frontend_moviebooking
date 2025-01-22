@@ -2,15 +2,14 @@ import axios from "axios"; // Import Axios
 import { Eye, EyeOff, Lock, UserRound, X } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../../components/NavBar";
-
 import { AdminLoginContext } from "../../context/AdminLoginContext";
 import FacebookIcon from "/images/facebook.png";
-import FourImage from "/images/four.jpeg";
 import GoogleIcon from "/images/google.png";
 import Logo from "/images/logo2.png";
-import { ToastContainer } from "react-toastify";
+import FourImage from "/images/side_image.png";
 
 const Login = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -71,7 +70,7 @@ const Login = () => {
         navigate("/"); // Navigates to another route
       }
     } catch (error) {
-      console.error(
+      toast.error(
         "Error:",
         error.response ? error.response.data : error.message
       );
@@ -84,7 +83,7 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <ToastContainer/>
+      <ToastContainer />
       <div
         className="h-screen bg-gray-900 flex justify-center overflow-hidden"
         // style={{
@@ -105,7 +104,7 @@ const Login = () => {
         <div className="w-full md:w-[50%] flex items-center justify-center p-6 relative">
           <button
             onClick={() => navigate("/")} // Navigate to home page
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-300 transition-colors"
+            className="absolute top-20 right-4 text-gray-400 hover:text-gray-300 transition-colors"
             aria-label="Close"
           >
             <X size={24} />
