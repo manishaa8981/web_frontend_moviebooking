@@ -1,7 +1,7 @@
 import {
+  Armchair,
   BarChart,
   Box,
-  BoxIcon,
   Calendar,
   Film,
   LogOut,
@@ -13,9 +13,10 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AdminLoginContext } from "../../context/AdminLoginContext";
+import AddExamSeat from "./AddExamSeat";
 import HallAdminPanel from "./Hall";
 import MovieAdminPanel from "./Movie";
-import SeatAdminPanel from "./Seat";
+import ShowTime from "./ShowTime";
 import Logo from "/images/logo2.png";
 
 const AdminPanel = () => {
@@ -27,12 +28,13 @@ const AdminPanel = () => {
   const tabs = [
     { name: "Movies & Showtimes", icon: Film },
     { name: "Users", icon: Users },
-    { name: "Screening Schedule", icon: Calendar },
+    // { name: "ShowTime", icon: Calendar },
     { name: "Analytics", icon: BarChart },
     { name: "Settings", icon: Settings },
     { name: "Movie", icon: MoveIcon },
     { name: "Hall", icon: Box },
-    { name: "Seat", icon: BoxIcon },
+    { name: "ShowTime", icon: Calendar },
+    { name: "Binita Seat", icon: Armchair },
   ];
 
   const handleSignOut = () => {
@@ -144,40 +146,6 @@ const AdminPanel = () => {
             </div>
           )}
 
-          {activeTab === "Screening Schedule" && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-indigo-900">
-                Today's Schedule
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ScheduleCard
-                  time="10:00 AM"
-                  movie="Inception"
-                  hall="Hall A"
-                  bookings="45/100"
-                />
-                <ScheduleCard
-                  time="1:30 PM"
-                  movie="The Dark Knight"
-                  hall="Hall B"
-                  bookings="82/100"
-                />
-                <ScheduleCard
-                  time="4:00 PM"
-                  movie="Inception"
-                  hall="Hall A"
-                  bookings="30/100"
-                />
-                <ScheduleCard
-                  time="7:30 PM"
-                  movie="The Dark Knight"
-                  hall="Hall B"
-                  bookings="95/100"
-                />
-              </div>
-            </div>
-          )}
-
           {activeTab === "Analytics" && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-indigo-900">Analytics</h2>
@@ -190,7 +158,9 @@ const AdminPanel = () => {
           )}
           {activeTab === "Movie" && <MovieAdminPanel />}
           {activeTab === "Hall" && <HallAdminPanel />}
-          {activeTab === "Seat" && <SeatAdminPanel />}
+          {/* {activeTab === "Seat" && <SeatAdminPanel />} */}
+          {activeTab === "ShowTime" && <ShowTime />}
+          {activeTab === "Binita Seat" && <AddExamSeat />}
         </div>
       </div>
     </div>
@@ -221,22 +191,6 @@ const MovieCard = ({ title, status, screenings, occupancy }) => {
           <span>Average Occupancy</span>
           <span className="font-medium">{occupancy}</span>
         </div>
-      </div>
-    </div>
-  );
-};
-
-const ScheduleCard = ({ time, movie, hall, bookings }) => {
-  return (
-    <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
-      <div className="flex justify-between items-center mb-4">
-        <span className="text-lg font-semibold text-indigo-900">{time}</span>
-        <span className="text-sm text-gray-500">{hall}</span>
-      </div>
-      <h3 className="text-lg font-medium mb-3">{movie}</h3>
-      <div className="flex justify-between items-center text-gray-600">
-        <span>Bookings</span>
-        <span className="font-medium">{bookings}</span>
       </div>
     </div>
   );
