@@ -52,7 +52,8 @@ const MovieCard = () => {
               {/* Image Container */}
               <figure className="relative overflow-hidden h-[400px]">
                 <img
-                  src={movie.movie_image || "/api/placeholder/400/600"}
+                  // src={movie.movie_image || "/api/placeholder/400/600"}
+                  src={`http://localhost:4011/public/uploads/images/${movie.movie_image}`}
                   alt={movie.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
