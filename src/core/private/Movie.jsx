@@ -7,8 +7,9 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import axios from "axios";
-import { ArrowUpDown, PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, PlusIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 
 const MovieAdminPanel = () => {
   const [movies, setMovies] = useState([]);
@@ -27,69 +28,7 @@ const MovieAdminPanel = () => {
     }
   };
 
-  // Handle movie submission (add or update)
-  // const handleSaveMovie = async (movie) => {
-  //   try {
-  //     if (movie.id) {
-  //       // Update movie
-  //       await axios.put(`http://localhost:4011/api/movie/${movie.id}`, movie);
-  //     } else {
-  //       // Add new movie
-  //       await axios.post("http://localhost:4011/api/movie/save", movie);
-  //     }
-  //     fetchMovies(); // Refresh the movie list
-  //     setIsModalOpen(false);
-  //   } catch (error) {
-  //     console.error("Error saving movie:", error);
-  //   }
-  // };
-
-  // const handleSaveMovie = async (movieData) => {
-  //   try {
-  //     const token = localStorage.getItem("token");
-  //     const headers = {
-  //       Authorization: `Bearer ${token}`,
-  //       "Content-Type": "multipart/form-data",
-  //     };
-
-  //     // Create FormData object to handle file upload
-  //     const formData = new FormData();
-
-  //     // Add all movie data to FormData
-  //     Object.keys(movieData).forEach((key) => {
-  //       formData.append(key, movieData[key]);
-  //     });
-
-  //     // Add image file if one was selected
-  //     if (movieImage) {
-  //       formData.append("movie_image", movieImage);
-  //     }
-
-  //     if (movieData?.id) {
-  //       // Update movie
-  //       await axios.put(
-  //         `http://localhost:4011/api/movie/${movieData?.id}`,
-  //         formData,
-  //         {
-  //           headers,
-  //         }
-  //       );
-  //     } else {
-  //       // Add new movie
-  //       await axios.post("http://localhost:4011/api/movie/save", formData, {
-  //         headers,
-  //       });
-  //     }
-
-  //     // Clear form after saving
-  //     setMovieImage(null); // Clear the selected movie image
-  //     setIsModalOpen(false); // Close the modal
-  //     setCurrentMovie(null); // Reset current movie
-  //     fetchMovies(); // Refresh the movie list
-  //   } catch (e) {
-  //     console.error("Error saving movie:", e);
-  //   }
-  // };
+  // Save and Update
   const handleSaveMovie = async (movieData) => {
     try {
       const token = localStorage.getItem("token");
@@ -170,7 +109,7 @@ const MovieAdminPanel = () => {
         <div className="flex justify-center">
           {row.original.movie_image ? (
             <img
-              src={row.original.movie_image}
+              src={`http://localhost:4011/public/uploads/images/${row.original.movie_image}`}
               alt="Movie"
               className="w-24 h-24 object-cover rounded"
             />
@@ -212,13 +151,13 @@ const MovieAdminPanel = () => {
             onClick={() => handleEditMovie(row.original)}
             className="btn btn-ghost btn-sm"
           >
-            <PencilIcon size={16} />
+            <FaEdit size={16} />
           </button>
           <button
             onClick={() => handleDeleteMovie(row.original?._id)}
             className="btn btn-ghost btn-sm text-error"
           >
-            <TrashIcon size={16} />
+            <FaTrash size={16} />
           </button>
         </div>
       ),
@@ -240,7 +179,7 @@ const MovieAdminPanel = () => {
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">Movie Management</h2>
+        <h2 className="text-2xl font-bold text-indigo-900">Movie Management</h2>{" "}
         <div className="flex gap-4">
           <input
             type="text"
@@ -342,24 +281,33 @@ const MovieAdminPanel = () => {
       {isModalOpen && (
         <div className="modal modal-open">
           <div className="modal-box">
-            <h3 className="font-bold text-lg">
-              {currentMovie ? "Edit Movie" : "Add New Movie"}
-            </h3>
+            <div className="flex justify-between items-center">
+              <h3 className="font-bold text-lg">
+                {currentMovie ? "Edit Movie" : "Add New Movie"}
+              </h3>
+              <FaTimes
+                className="text-xl cursor-pointer hover:text-red-600"
+                onClick={() => setIsModalOpen(false)}
+              />
+            </div>
+
             <form
               className="space-y-4 mt-4"
               onSubmit={(e) => {
                 e.preventDefault();
                 const movieData = {
-                  id: currentMovie?._id, // Only include ID if editing
+                  _id: currentMovie?._id, // Only include ID if editing
                   movie_name: e.target.movie_name.value,
                   title: e.target.title.value,
                   genre: e.target.genre.value,
+                  language: e.target.language.value,
                   duration: e.target.duration.value,
                   description: e.target.description.value,
                   release_date: e.target.release_date.value,
                   status: e.target.status.value,
                   cast_name: e.target.cast_name.value,
                   rating: parseFloat(e.target.rating.value),
+                  trailer_url: e.target.trailer_url.value,
                 };
                 handleSaveMovie(movieData);
               }}
@@ -478,8 +426,8 @@ const MovieAdminPanel = () => {
                     defaultValue={currentMovie?.status || "upcoming"}
                     required
                   >
-                    <option value="upcoming">Upcoming</option>
-                    <option value="released">Released</option>
+                    <option value="Upcoming">Upcoming</option>
+                    <option value="Released">Released</option>
                   </select>
                 </div>
               </div>
@@ -495,21 +443,50 @@ const MovieAdminPanel = () => {
                   defaultValue={currentMovie?.cast_name}
                 />
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Rating</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="rating"
+                    min="0"
+                    max="5"
+                    step="0.1"
+                    className="input input-bordered"
+                    defaultValue={currentMovie?.rating}
+                  />
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Language</span>
+                  </label>
+                  <select
+                    name="language"
+                    className="select select-bordered"
+                    defaultValue={currentMovie?.language || "Hindi"}
+                    required
+                  >
+                    <option value="Hindi">Hindi</option>
+                    <option value="English">English</option>
+                  </select>
+                </div>
+              </div>
 
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text">Rating</span>
+                  <span className="label-text">Trailer URL</span>
                 </label>
                 <input
-                  type="number"
-                  name="rating"
-                  min="0"
-                  max="5"
-                  step="0.1"
+                  type="url"
+                  name="trailer_url"
                   className="input input-bordered"
-                  defaultValue={currentMovie?.rating}
+                  defaultValue={currentMovie?.trailer_url}
                 />
               </div>
+
               {/* Add image upload */}
               <div className="form-control">
                 <label className="label">
@@ -543,3 +520,250 @@ const MovieAdminPanel = () => {
 };
 
 export default MovieAdminPanel;
+
+// import axios from "axios";
+// import { PlusIcon } from "lucide-react";
+// import React, { useEffect, useState } from "react";
+
+// const MovieCard = ({ movie, onEdit, onDelete }) => {
+//   return (
+//     <div className="bg-white rounded-lg shadow-md p-4">
+//       <h3 className="text-xl font-bold mb-2">{movie.movie_name}</h3>
+//       <div className="flex justify-between items-center">
+//         <div>
+//           <p className="text-gray-600">
+//             Daily Screenings: {movie.daily_screenings || 0}
+//           </p>
+//           <p className="text-gray-600">
+//             Average Occupancy: {movie.average_occupancy || 0}%
+//           </p>
+//         </div>
+//         <div className="flex gap-2">
+//           <button
+//             onClick={() => onEdit(movie)}
+//             className="btn btn-primary btn-sm"
+//           >
+//             Edit
+//           </button>
+//           <button
+//             onClick={() => onDelete(movie._id)}
+//             className="btn btn-error btn-sm"
+//           >
+//             Delete
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const MovieAdminPanel = () => {
+//   const [movies, setMovies] = useState([]);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [currentMovie, setCurrentMovie] = useState(null);
+//   const [movieImage, setMovieImage] = useState(null);
+
+//   const fetchMovies = async () => {
+//     try {
+//       const response = await axios.get("http://localhost:4011/api/movie/get");
+//       setMovies(response.data);
+//     } catch (error) {
+//       console.error("Error fetching movies:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchMovies();
+//   }, []);
+
+//   const handleSaveMovie = async (movieData) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       const headers = {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "multipart/form-data",
+//       };
+
+//       const formData = new FormData();
+//       Object.keys(movieData).forEach((key) =>
+//         formData.append(key, movieData[key])
+//       );
+
+//       if (movieImage) formData.append("movie_image", movieImage);
+
+//       if (movieData.id) {
+//         // Update movie
+//         await axios.put(
+//           `http://localhost:4011/api/movie/${movieData.id}`,
+//           formData,
+//           { headers }
+//         );
+//       } else {
+//         // Add new movie
+//         await axios.post("http://localhost:4011/api/movie/save", formData, {
+//           headers,
+//         });
+//       }
+
+//       await fetchMovies();
+//       setIsModalOpen(false);
+//       setCurrentMovie(null);
+//       setMovieImage(null);
+//     } catch (error) {
+//       console.error("Error saving movie:", error.response || error);
+//       alert("Failed to save movie. Please try again.");
+//     }
+//   };
+
+//   const handleDeleteMovie = async (id) => {
+//     try {
+//       await axios.delete(`http://localhost:4011/api/movie/${id}`);
+//       fetchMovies();
+//     } catch (error) {
+//       console.error("Error deleting movie:", error);
+//     }
+//   };
+
+//   const handleAddMovie = () => {
+//     setCurrentMovie(null);
+//     setIsModalOpen(true);
+//   };
+
+//   const handleEditMovie = (movie) => {
+//     setCurrentMovie(movie);
+//     setIsModalOpen(true);
+//   };
+
+//   return (
+//     <div className="p-4 max-w-7xl mx-auto">
+//       <div className="flex justify-between items-center mb-6">
+//         <h2 className="text-2xl font-bold">Movie Management</h2>
+//         <button onClick={handleAddMovie} className="btn btn-primary">
+//           <PlusIcon size={20} /> Add Movie
+//         </button>
+//       </div>
+
+//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+//         {movies.map((movie) => (
+//           <MovieCard
+//             key={movie._id}
+//             movie={movie}
+//             onEdit={handleEditMovie}
+//             onDelete={handleDeleteMovie}
+//           />
+//         ))}
+//       </div>
+
+//       {/* Add/Edit Modal */}
+//       {isModalOpen && (
+//         <div className="modal modal-open">
+//           <div className="modal-box">
+//             <h3 className="font-bold text-lg">
+//               {currentMovie ? "Edit Movie" : "Add New Movie"}
+//             </h3>
+//             <form
+//               className="space-y-4 mt-4"
+//               onSubmit={(e) => {
+//                 e.preventDefault();
+//                 const movieData = {
+//                   id: currentMovie?._id, // Only include ID if editing
+//                   movie_name: e.target.movie_name.value,
+//                   title: e.target.title.value,
+//                   genre: e.target.genre.value,
+//                   duration: e.target.duration.value,
+//                   description: e.target.description.value,
+//                   release_date: e.target.release_date.value,
+//                   status: e.target.status.value,
+//                   cast_name: e.target.cast_name.value,
+//                   rating: parseFloat(e.target.rating.value),
+//                 };
+//                 handleSaveMovie(movieData);
+//               }}
+//             >
+//               <div className="form-control">
+//                 <label className="label">
+//                   <span className="label-text">Movie Name</span>
+//                 </label>
+//                 <input
+//                   type="text"
+//                   name="movie_name"
+//                   className="input input-bordered"
+//                   defaultValue={currentMovie?.movie_name}
+//                   required
+//                 />
+//               </div>
+
+//               {/* Additional fields */}
+//               <div className="form-control">
+//                 <label className="label">
+//                   <span className="label-text">Genre</span>
+//                 </label>
+//                 <select
+//                   name="genre"
+//                   className="select select-bordered"
+//                   defaultValue={currentMovie?.genre || ""}
+//                   required
+//                 >
+//                   <option value="">Select Genre</option>
+//                   {[
+//                     "Action",
+//                     "Adventure",
+//                     "Comedy",
+//                     "Drama",
+//                     "Horror",
+//                     "Sci-Fi",
+//                     "Fantasy",
+//                     "Mystery",
+//                     "Thriller",
+//                     "Romance",
+//                     "Documentary",
+//                     "Musical",
+//                     "Animation",
+//                     "Crime",
+//                     "Family",
+//                     "History",
+//                     "War",
+//                     "Western",
+//                     "Slice of Life",
+//                   ].map((genre) => (
+//                     <option key={genre} value={genre}>
+//                       {genre}
+//                     </option>
+//                   ))}
+//                 </select>
+//               </div>
+
+//               {/* Add image upload */}
+//               <div className="form-control">
+//                 <label className="label">
+//                   <span className="label-text">Movie Image</span>
+//                 </label>
+//                 <input
+//                   type="file"
+//                   className="file-input file-input-bordered"
+//                   accept="image/*"
+//                   onChange={(e) => setMovieImage(e.target.files[0])}
+//                 />
+//               </div>
+
+//               <div className="modal-action">
+//                 <button type="submit" className="btn btn-primary">
+//                   Save
+//                 </button>
+//                 <button
+//                   type="button"
+//                   className="btn"
+//                   onClick={() => setIsModalOpen(false)}
+//                 >
+//                   Cancel
+//                 </button>
+//               </div>
+//             </form>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default MovieAdminPanel;
