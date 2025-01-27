@@ -149,6 +149,7 @@ const HallAdminPanel = () => {
   });
 
   return (
+    
     <div className="p-4 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-indigo-900">Hall Management</h2>

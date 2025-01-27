@@ -1,8 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useRef } from "react";
 import Slider from "react-slick";
-import Movie2 from "/images/movie2.jpg";
-import Movie1 from "/images/movie22.jpg";
 const HeroCarousel = () => {
   const sliderRef = useRef(null);
 
@@ -15,7 +13,7 @@ const HeroCarousel = () => {
       rating: "8.8",
       duration: "2h 28m",
       genre: "Sci-Fi",
-      // imageUrl: "/images/movie2.jpg",
+      image: "/images/movie1.jpg", // Image for this slide
     },
     {
       title: "The Dark Knight",
@@ -25,7 +23,7 @@ const HeroCarousel = () => {
       rating: "9.0",
       duration: "2h 32m",
       genre: "Action",
-      // imageUrl: "/images/movie22.jpg",
+      image: "/images/movie2.jpg", // Image for this slide
     },
     {
       title: "Interstellar",
@@ -35,6 +33,7 @@ const HeroCarousel = () => {
       rating: "8.6",
       duration: "2h 49m",
       genre: "Adventure",
+      image: "/images/movie3.jpg", // Image for this slide
     },
   ];
 
@@ -62,14 +61,14 @@ const HeroCarousel = () => {
             <div className="absolute inset-0">
               <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent " />
               <img
-                src={(Movie1, Movie2)}
+                src={movie.image} // Use the specific image for the slide
                 alt={movie.title}
                 className="w-full h-full object-cover"
               />
             </div>
 
             {/* Content */}
-            <div className="relative  h-full flex items-center">
+            <div className="relative h-full flex items-center">
               <div className="container mx-auto px-4">
                 <div className="max-w-2xl">
                   {/* Movie Info */}
@@ -80,7 +79,6 @@ const HeroCarousel = () => {
                     {movie.tagline}
                   </p>
                   <div className="flex items-center gap-4 text-gray-300 mb-6">
-                    <span className="flex items-center">⭐ {movie.rating}</span>
                     <span>{movie.duration}</span>
                     <span>{movie.genre}</span>
                   </div>
