@@ -24,7 +24,7 @@ const Navbar = () => {
    ${
      isScrolled
        ? "bg-gray-800 text-white shadow-md"
-       : "bg-transparent text-black"
+       : "bg-transparent text-white"
      // isScrolled ? "bg-white text-black shadow-md" : "bg-gray-800 text-white"
    }`}
     >

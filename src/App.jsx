@@ -191,15 +191,21 @@ function App() {
           <MovieCard />
         </Suspense>
       ),
+      children: [
+        {
+          path: "/movie/:id", // Matches "/movie/:_id"
+          element: (
+            <Suspense>
+              <MovieDescription />
+            </Suspense>
+          ),
+        },
+      ],
     },
-    {
-      path: "/movie/:id",
-      element: (
-        <Suspense>
-          <MovieDescription />
-        </Suspense>
-      ),
-    },
+    // {
+    //   path: "/movie/:_id",
+    //   element: <MovieDescription />,
+    // },
     { path: "*", element: <>unauthorized</> },
   ];
 
