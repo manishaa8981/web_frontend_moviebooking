@@ -82,7 +82,7 @@ const Register = () => {
     <>
       <Navbar />
       <ToastContainer />
-      <div className="h-screen bg-gray-900 flex justify-center overflow-hidden">
+      <div className="h-screen bg-neutral-800 flex justify-center overflow-hidden">
         {/* Left Side (Illustration) */}
         <div className="hidden md:block md:w-[50%] bg-gradient-to-br from-gray-800 to-gray-900 text-white flex flex-col justify-center items-center">
           <img
@@ -109,7 +109,7 @@ const Register = () => {
               <div className="flex items-center justify-center gap-2 mb-4">
                 {/* <img src={Logo} alt="Logo" className="w-20 h-20 rounded-full shadow-lg" /> */}
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">
+              <h2 className="text-2xl font-bold text-white mt-1">
                 Create Your Account 🎥
               </h2>
               {/* <p className="text-gray-400 text-sm">
@@ -118,7 +118,7 @@ const Register = () => {
             </div>
 
             {/* Sign-Up Form */}
-            <div className="bg-gray-800 rounded-xl p-6 shadow-2xl">
+            <div className="bg-neutral-700 rounded-xl p-6 shadow-2xl">
               <form className="space-y-4" onSubmit={handleSubmit}>
                 {/* Username Input */}
                 <div>
@@ -135,7 +135,7 @@ const Register = () => {
                       type="username"
                       value={username}
                       onChange={(e) => setusername(e.target.value)}
-                      className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                      className="w-full bg-neutral-600 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                       placeholder="Enter your username"
                     />
                     <User
@@ -159,7 +159,7 @@ const Register = () => {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                      className="w-full bg-neutral-600 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                       placeholder="Enter your email"
                     />
                     <Mail
@@ -183,7 +183,7 @@ const Register = () => {
                       type="text"
                       value={contact_no}
                       onChange={(e) => setcontact_no(e.target.value)}
-                      className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                      className="w-full bg-neutral-600 text-white rounded-lg py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                       placeholder="Enter your phone number"
                     />
                     <Phone
@@ -207,7 +207,7 @@ const Register = () => {
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                      className="w-full bg-neutral-600 text-white rounded-lg py-2 px-4 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                       placeholder="Enter your password"
                     />
                     <Lock
@@ -238,7 +238,7 @@ const Register = () => {
                       type={showConfirmPassword ? "text" : "password"}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      className="w-full bg-gray-700 text-white rounded-lg py-2 px-4 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+                      className="w-full bg-neutral-600 text-white rounded-lg py-2 px-4 pl-10 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
                       placeholder="Confirm your password"
                     />
                     <Lock
@@ -263,7 +263,7 @@ const Register = () => {
                 {/* Sign Up Button */}
                 <button
                   type="submit"
-                  className="w-full bg-orange-500 text-white py-2 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   Sign Up
                 </button>
@@ -271,7 +271,7 @@ const Register = () => {
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <button
                     type="button"
-                    className="flex items-center justify-center gap-2 bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
                   >
                     <img
                       src={GoogleIcon}
@@ -282,7 +282,7 @@ const Register = () => {
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center gap-2 bg-gray-700 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
                   >
                     <img
                       src={FacebookIcon}
