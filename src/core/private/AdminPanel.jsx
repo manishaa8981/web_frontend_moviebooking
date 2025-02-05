@@ -13,9 +13,10 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { AdminLoginContext } from "../../context/AdminLoginContext";
-import AddExamSeat from "./AddExamSeat";
 import HallAdminPanel from "./Hall";
+// import AdminSeatPanel from "./ManishaSeat";
 import MovieAdminPanel from "./Movie";
+import AdminSeatPanel from "./SeatPanel";
 import ShowTime from "./ShowTime";
 import Logo from "/images/logo2.png";
 
@@ -28,13 +29,12 @@ const AdminPanel = () => {
   const tabs = [
     { name: "Movies & Showtimes", icon: Film },
     { name: "Users", icon: Users },
-    // { name: "ShowTime", icon: Calendar },
     { name: "Analytics", icon: BarChart },
     { name: "Settings", icon: Settings },
     { name: "Movie", icon: MoveIcon },
     { name: "Hall", icon: Box },
     { name: "ShowTime", icon: Calendar },
-    { name: "Binita Seat", icon: Armchair },
+    { name: "Seat", icon: Armchair },
   ];
 
   const handleSignOut = () => {
@@ -158,9 +158,8 @@ const AdminPanel = () => {
           )}
           {activeTab === "Movie" && <MovieAdminPanel />}
           {activeTab === "Hall" && <HallAdminPanel />}
-          {/* {activeTab === "Seat" && <SeatAdminPanel />} */}
           {activeTab === "ShowTime" && <ShowTime />}
-          {activeTab === "Binita Seat" && <AddExamSeat />}
+          {activeTab === "Seat" && <AdminSeatPanel />}
         </div>
       </div>
     </div>
