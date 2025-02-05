@@ -1,21 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const MovieCard = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const navigate = useNavigate();
 
-  // Fetch movies from API
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get("http://localhost:4011/api/movie/get"); // Replace with your API endpoint
+        const response = await axios.get("http://localhost:4011/api/movie/get");
         setMovies(response.data);
-        setLoading(false);
       } catch (err) {
         console.error(err);
         setError("Failed to fetch movie data");
+      } finally {
         setLoading(false);
       }
     };
@@ -25,7 +27,7 @@ const MovieCard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-800 text-white">
+      <div className="flex justify-center items-center min-h-screen bg-[#121212] text-white">
         <p>Loading...</p>
       </div>
     );
@@ -33,96 +35,85 @@ const MovieCard = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gray-800 text-red-500">
+      <div className="flex justify-center items-center min-h-screen bg-[#121212] text-red-500">
         <p>{error}</p>
       </div>
     );
   }
 
+  const displayedMovies = showAll ? movies : movies.slice(0, 4);
+
   return (
-    <div className="bg-gray-800 min-h-screen p-6">
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {movies.map((movie) => (
-            <div
-              key={movie.id}
-              onClick={() => navigate(`/movies/${movie.id}`)} // Navigate to the details page
-              className="card bg-gray-900 shadow-xl group relative z-10 hover:z-20 transition-all duration-300 transform hover:scale-200 hover:-translate-y-4 hover:shadow-[0_0_30px_rgba(0,0,0,0.5)]"
-            >
-              {/* Image Container */}
-              <figure className="relative overflow-hidden h-[400px]">
-                <img
-                  // src={movie.movie_image || "/api/placeholder/400/600"}
-                  src={`http://localhost:4011/public/uploads/images/${movie.movie_image}`}
-                  alt={movie.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                {/* Image Overlay on Hover */}
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity duration-300" />
+    <div className="bg-neutral-900 p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold text-white">Popular Movies</h2>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="text-[#1DB954] hover:underline font-medium"
+        >
+          {showAll ? "Show Less" : "See all"}
+        </button>
+      </div>
 
-                {/* Rating Badge */}
-                {/* <div className="absolute top-4 right-4 badge badge-warning gap-2 p-3 z-10">
-                  ⭐ {movie.rating || 'N/A'}
-                </div> */}
+      {/* Movies Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {displayedMovies.map((movie) => (
+          <div
+            key={movie.id}
+            onClick={() => navigate(`/movie/${movie._id}`)}
+            className="group bg-neutral-800 rounded-lg p-4 cursor-pointer transition-all duration-300 hover:bg-[#282828] relative"
+          >
+            {/* Hover Border Effect */}
+            <div className="absolute inset-0 rounded-lg transition-all duration-300 group-hover:ring-2 group-hover:ring-[#1DB954] " />
 
-                {/* Play Trailer Button - Appears on Hover */}
-                <button className="absolute inset-0 m-auto w-16 h-16 flex items-center justify-center rounded-full bg-orange-500 opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-50 group-hover:scale-100">
+            {/* Image Container */}
+            <div className="relative aspect-square mb-4 rounded-md overflow-hidden shadow-lg">
+              <img
+                src={`http://localhost:4011/public/uploads/images/${movie.movie_image}`}
+                alt={movie.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/movie/${movie._id}`);
+                  }}
+                  className="bg-[#1DB954]  text-black rounded-full p-3 shadow-lg hover:scale-50 transition-transform"
+                >
                   <svg
-                    className="w-8 h-8 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                    className="w-6 h-6"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
                   >
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                      clipRule="evenodd"
                     />
                   </svg>
                 </button>
-              </figure>
-
-              {/* Card Content */}
-              <div className="card-body p-4 bg-gradient-to-b from-gray-900 to-gray-800">
-                {/* Title */}
-                <h2 className="card-title text-xl font-bold text-white mb-2 group-hover:text-orange-500 transition-colors">
-                  {movie.title}
-                  <div className="badge badge-error">
-                    {movie.releaseDate || "Coming Soon"}
-                  </div>
-                </h2>
-
-                {/* Movie Details */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-gray-300">
-                    <span className="text-orange-500">●</span>
-                    {movie.duration || "N/A"}
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    <div className="badge badge-outline text-orange-400 border-orange-400">
-                      {movie.genre || "N/A"}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Booking Button */}
-                <div className="card-actions mt-4">
-                  <button className="btn btn-block bg-orange-500 hover:bg-orange-600 text-white border-none transform transition-transform duration-300 group-hover:scale-105">
-                    Book Tickets
-                  </button>
-                </div>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Content */}
+            <div className="space-y-1">
+              <h3 className="font-bold text-white truncate">{movie.title}</h3>
+              <p className="text-sm text-gray-400 line-clamp-2">
+                {movie.genre} • {movie.languages}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-1 text-xs bg-[#282828] text-gray-300 rounded-full">
+                  {movie.status}
+                </span>
+              </div>
+              <button className="w-full bg-green-500 text-black py-2 rounded-full font-medium hover:bg-green-400 transition duration-300">
+                Book Now
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
