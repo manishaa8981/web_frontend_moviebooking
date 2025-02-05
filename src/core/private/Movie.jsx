@@ -471,6 +471,7 @@ const MovieAdminPanel = () => {
                   >
                     <option value="Hindi">Hindi</option>
                     <option value="English">English</option>
+                    <option value="English">Nepali</option>
                   </select>
                 </div>
               </div>
