@@ -104,6 +104,7 @@ import MovieCard from "./components/MovieCard";
 import { AdminLoginContext } from "./context/AdminLoginContext";
 import MovieBooking from "./core/public/MovieBooking";
 import MovieDescription from "./core/public/MovieDescription";
+import SeatBooking from "./core/public/SeatBooking";
 const BookingIndex = lazy(() => import("./core/private/booking"));
 const CustomerForm = lazy(() => import("./core/private/customer/form"));
 const CustomerIndex = lazy(() => import("./core/private/customer"));

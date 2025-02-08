@@ -1,35 +1,72 @@
-// components/booking/MovieBooking.jsx
+import axios from "axios";
 import { CircleArrowLeft } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/NavBar";
-import SeatBooking from "./SeatBooking";
 
 const MovieBooking = () => {
-  const [selectedDate, setSelectedDate] = useState("29");
-  const [selectedCinema, setSelectedCinema] = useState("Rising Mall");
-  const [selectedLanguage, setSelectedLanguage] = useState("All");
-  const [showSeatLayout, setShowSeatLayout] = useState(false);
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const { movieId } = useParams(); // Get movie ID from URL
   const navigate = useNavigate();
+
+  // State variables
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedHall, setSelectedHall] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("All");
+  const [hall, setHall] = useState([]);
+  const [showTimes, setShowTimes] = useState([]);
+  const [languages, setLanguages] = useState(["All"]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch cinemas for the selected movie
+
+  useEffect(() => {
+    const fetchCinemas = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:4011/api/movie/${movieId}/hall/`
+        );
+        console.log("Fetched halls:", response.data); // Add this to debug
+        setHall(response.data);
+        setSelectedHall(response.data[0]?._id || ""); // Changed from name to _id
+      } catch (error) {
+        console.error("Error fetching cinemas:", error);
+        console.log("Error details:", error.response); // Add this to debug
+      }
+    };
+
+    if (movieId) {
+      // Add this check
+      fetchCinemas();
+    }
+  }, [movieId]);
+
+  // Fetch showtimes when a cinema is selected
+  useEffect(() => {
+    if (!selectedHall) return;
+
+    const fetchShowtimes = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `http://localhost:4011/api/hall/${selectedHall}/showtime`
+        );
+        setShowTimes(response.data);
+        setLanguages(["All", ...new Set(response.data.map((s) => s.language))]);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching showtimes:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchShowtimes();
+  }, [selectedHall]);
+
+  // Available dates for booking
   const dates = [
-    { day: "29", month: "Jan", weekday: "Wed" },
-    { day: "30", month: "Jan", weekday: "Thu" },
-  ];
-  const hallId = "65b3e8c2a90f5b001d2e4a7c";
-  const cinemas = [
-    "All",
-    "Rising Mall",
-    "Bhatbhateni Bhaktapur",
-    "Civil Mall",
-    "Labim Mall",
-    "Chhaya Center",
-  ];
-
-  const languages = ["All", "Hindi Dubbed"];
-
-  const showTimes = [
-    { time: "06:15 PM", type: "2D", theater: "RISING MALL", language: "HIN" },
+    { day: "05", month: "Feb", weekday: "Mon" },
+    { day: "06", month: "Feb", weekday: "Tue" },
+    { day: "07", month: "Feb", weekday: "Wed" },
   ];
 
   return (
@@ -39,9 +76,12 @@ const MovieBooking = () => {
         <div className="max-w-6xl mx-auto bg-neutral-800 rounded-lg shadow-xl p-6">
           {/* Header with Back Button */}
           <div className="flex items-center gap-4 mb-8">
-            <CircleArrowLeft className="text-neutral-300 hover:text-white transition-colors cursor-pointer w-8 h-8" />
+            <CircleArrowLeft
+              className="text-neutral-300 hover:text-white transition-colors cursor-pointer w-8 h-8"
+              onClick={() => navigate(-1)}
+            />
             <h2 className="text-2xl font-bold text-white">
-              Select Date, Language & Time Slots
+              Select Date, Cinema & Showtimes
             </h2>
           </div>
 
@@ -50,13 +90,12 @@ const MovieBooking = () => {
             <h3 className="text-lg font-semibold text-white mb-3">
               Select Date
             </h3>
-            <p className="text-sm text-neutral-400 mb-2">Tomorrow</p>
             <div className="flex gap-4 overflow-x-auto pb-2">
               {dates.map((date) => (
                 <button
                   key={date.day}
                   onClick={() => setSelectedDate(date.day)}
-                  className={`flex flex-col items-center p-4 rounded-lg transition-all min-w-[80px] ${
+                  className={`flex flex-col items-center p-4 rounded-lg min-w-[80px] ${
                     selectedDate === date.day
                       ? "bg-green-500 text-black"
                       : "bg-neutral-700 text-white hover:bg-neutral-600"
@@ -76,17 +115,17 @@ const MovieBooking = () => {
               Select Cinema
             </h3>
             <div className="flex flex-wrap gap-3">
-              {cinemas.map((cinema) => (
+              {hall.map((hall) => (
                 <button
-                  key={cinema}
-                  onClick={() => setSelectedCinema(cinema)}
-                  className={`px-6 py-3 rounded-full transition-colors ${
-                    selectedCinema === cinema
+                  key={hall._id} // Changed from id to _id
+                  onClick={() => setSelectedHall(hall._id)} // Changed from id to _id
+                  className={`px-6 py-3 rounded-full ${
+                    selectedHall === hall._id // Changed from id to _id
                       ? "bg-green-500 text-black"
                       : "bg-neutral-700 text-white hover:bg-neutral-600"
                   }`}
                 >
-                  {cinema}
+                  {hall.hall_name} // Changed from name to hall_name
                 </button>
               ))}
             </div>
@@ -102,7 +141,7 @@ const MovieBooking = () => {
                 <button
                   key={lang}
                   onClick={() => setSelectedLanguage(lang)}
-                  className={`px-6 py-3 rounded-full transition-colors ${
+                  className={`px-6 py-3 rounded-full ${
                     selectedLanguage === lang
                       ? "bg-green-500 text-black"
                       : "bg-neutral-700 text-white hover:bg-neutral-600"
@@ -114,37 +153,44 @@ const MovieBooking = () => {
             </div>
           </div>
 
-          {/* Show Times */}
+          {/* Showtimes */}
           <div className="space-y-4">
-            {showTimes.map((show, index) => (
-              <div
-                key={index}
-                className="bg-neutral-700 rounded-lg overflow-hidden"
-              >
-                <div className="flex items-center justify-between p-4">
-                  <div>
-                    <h4 className="font-bold text-white">{show.theater}</h4>
-                    <p className="text-sm text-neutral-400">
-                      ({show.language})
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowSeatLayout(true)}
-                    className="px-6 py-2 rounded-full bg-green-500 text-black hover:bg-green-400 transition-colors flex items-center gap-2"
+            {loading ? (
+              <p className="text-neutral-400">Loading showtimes...</p>
+            ) : showTimes.length === 0 ? (
+              <p className="text-neutral-400">No showtimes available</p>
+            ) : (
+              showTimes
+                .filter(
+                  (show) =>
+                    selectedLanguage === "All" ||
+                    show.language === selectedLanguage
+                )
+                .map((show, index) => (
+                  <div
+                    key={index}
+                    className="bg-neutral-700 rounded-lg overflow-hidden"
                   >
-                    {show.time}
-                    <span className="ml-2 text-sm bg-black text-white px-3 py-1 rounded-full">
-                      {show.type}
-                    </span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Seat Booking Component */}
-          <div className="mt-8">
-            <SeatBooking hallId={hallId} />
+                    <div className="flex items-center justify-between p-4">
+                      <div>
+                        <h4 className="font-bold text-white">{show.hall}</h4>
+                        <p className="text-sm text-neutral-400">
+                          ({show.language})
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => navigate(`/seats/${show.id}`)}
+                        className="px-6 py-2 rounded-full bg-green-500 text-black hover:bg-green-400 flex items-center gap-2"
+                      >
+                        {show.time}
+                        <span className="ml-2 text-sm bg-black text-white px-3 py-1 rounded-full">
+                          {show.type}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                ))
+            )}
           </div>
         </div>
       </div>
