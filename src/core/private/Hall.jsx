@@ -1,28 +1,22 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 import axios from "axios";
-import { PlusIcon } from "lucide-react";
+import { X } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
 
-const HallAdminPanel = () => {
+const AdminHallPanel = () => {
   const [halls, setHalls] = useState([]);
-  const [movies, setMovies] = useState([]); // Fetch movie data
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentHall, setCurrentHall] = useState(null);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [hallName, setHallName] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [price, setPrice] = useState("");
+  const [editingHallId, setEditingHallId] = useState(null);
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
+  const [selectedMovies, setSelectedMovies] = useState([]);
+  const [selectedMovieIds, setSelectedMovieIds] = useState([]);
 
-  // Fetch halls and movies from the backend
   const fetchHalls = async () => {
     try {
-      const response = await axios.get("http://localhost:4011/api/hall/get");
+      const response = await axios.get("http://localhost:4011/api/hall");
+      console.log("Fetched halls:", response.data);
       setHalls(response.data);
     } catch (error) {
       console.error("Error fetching halls:", error);
@@ -31,360 +25,258 @@ const HallAdminPanel = () => {
 
   const fetchMovies = async () => {
     try {
-      const response = await axios.get("http://localhost:4011/api/movie/get");
+      const response = await axios.get("http://localhost:4011/api/movie");
+      console.log("Fetched movies:", response.data);
       setMovies(response.data);
     } catch (error) {
       console.error("Error fetching movies:", error);
     }
   };
 
-  // Save and Update Hall
-  const handleSaveHall = async (hallData) => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-
-      if (hallData._id) {
-        // Update hall
-        await axios.put(
-          `http://localhost:4011/api/hall/${hallData._id}`,
-          hallData,
-          { headers }
-        );
-      } else {
-        // Add new hall
-        await axios.post("http://localhost:4011/api/hall/save", hallData, {
-          headers,
-        });
-      }
-
-      // Refresh halls and close modal
-      await fetchHalls();
-      setIsModalOpen(false);
-      setCurrentHall(null);
-    } catch (error) {
-      console.error("Error saving hall:", error);
-      alert("Failed to save hall. Please try again.");
-    }
-  };
-
-  // Handle hall deletion
-  const handleDeleteHall = async (id) => {
-    try {
-      await axios.delete(`http://localhost:4011/api/hall/${id}`);
-      fetchHalls();
-    } catch (error) {
-      console.error("Error deleting hall:", error);
-    }
-  };
-
-  // Open modal for adding a new hall
-  const handleAddHall = () => {
-    setCurrentHall(null);
-    setIsModalOpen(true);
-  };
-
-  // Open modal for editing an existing hall
-  const handleEditHall = (hall) => {
-    setCurrentHall(hall);
-    setIsModalOpen(true);
-  };
-
   useEffect(() => {
     fetchHalls();
-    fetchMovies(); // Fetch movies as well
+    fetchMovies();
   }, []);
 
-  const columns = [
-    {
-      header: "Hall Name",
-      accessorKey: "hall_name",
-    },
-    {
-      header: "Hall Capacity",
-      accessorKey: "capacity",
-    },
-    {
-      header: "Movie",
-      accessorKey: "movieId",
-      cell: ({ row }) => {
-        const movie = movies.find((m) => m._id === row.original.movieId);
-        return movie ? movie.movie_name : "Not assigned";
-      },
-    },
-    {
-      header: "Actions",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          <button
-            onClick={() => handleEditHall(row.original)}
-            className="btn btn-ghost btn-sm"
-          >
-            <FaEdit size={16} />
-          </button>
-          <button
-            onClick={() => handleDeleteHall(row.original?._id)}
-            className="btn btn-ghost btn-sm text-error"
-          >
-            <FaTrash size={16} />
-          </button>
-        </div>
-      ),
-    },
-  ];
+  const handleMovieSelect = (e) => {
+    const movieId = e.target.value;
+    if (!movieId) return;
 
-  const table = useReactTable({
-    data: halls,
-    columns,
-    state: { sorting, globalFilter },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
+    const movie = movies.find((m) => m._id === movieId);
+    if (movie && !selectedMovieIds.includes(movieId)) {
+      setSelectedMovieIds((prev) => [...prev, movieId]);
+      setSelectedMovies((prev) => [...prev, movie]);
+    }
+  };
+
+  const handleRemoveMovie = (movieId) => {
+    setSelectedMovieIds((prev) => prev.filter((id) => id !== movieId));
+    setSelectedMovies((prev) => prev.filter((movie) => movie._id !== movieId));
+  };
+
+  const handleSaveHall = async () => {
+    if (!hallName || !capacity || !price) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    try {
+      const payload = {
+        hall_name: hallName,
+        capacity: Number(capacity),
+        price: Number(price),
+        movies: selectedMovieIds, // Make sure we're sending the movie IDs array
+      };
+
+      console.log("Saving hall with payload:", payload);
+
+      if (editingHallId) {
+        await axios.put(
+          `http://localhost:4011/api/hall/${editingHallId}`,
+          payload
+        );
+        alert("Hall updated successfully!");
+      } else {
+        await axios.post("http://localhost:4011/api/hall", payload);
+        alert("Hall added successfully!");
+      }
+
+      fetchHalls(); // Refresh the halls list
+      resetForm();
+      setIsAddFormVisible(false);
+    } catch (error) {
+      console.error("Error saving hall:", error);
+      alert(
+        `Failed to save hall: ${error.response?.data?.message || error.message}`
+      );
+    }
+  };
+
+  const handleDeleteHall = async (hallId) => {
+    if (!window.confirm("Are you sure you want to delete this hall?")) return;
+
+    try {
+      await axios.delete(`http://localhost:4011/api/hall/${hallId}`);
+      alert("Hall deleted successfully!");
+      fetchHalls(); // Refresh the halls list after deletion
+    } catch (error) {
+      console.error("Error deleting hall:", error);
+      alert("Failed to delete hall.");
+    }
+  };
+
+  const handleEditHall = (hall) => {
+    console.log("Editing hall:", hall);
+    setHallName(hall.hall_name);
+    setCapacity(hall.capacity);
+    setPrice(hall.price);
+    setEditingHallId(hall._id);
+    setSelectedMovies(hall.movies || []);
+    setSelectedMovieIds(hall.movies?.map((movie) => movie._id) || []);
+    setIsAddFormVisible(true);
+  };
+
+  const resetForm = () => {
+    setHallName("");
+    setCapacity("");
+    setPrice("");
+    setEditingHallId(null);
+    setSelectedMovies([]);
+    setSelectedMovieIds([]);
+  };
+
+  const toggleAddForm = () => {
+    setIsAddFormVisible(!isAddFormVisible);
+    if (isAddFormVisible) {
+      resetForm();
+    }
+  };
 
   return (
-    
-    <div className="p-4 max-w-7xl mx-auto">
+    <div className="bg-gray-900 text-white min-h-screen p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-indigo-900">Hall Management</h2>
-        <div className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Search halls..."
-            className="input input-bordered"
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-          />
-          <button onClick={handleAddHall} className="btn btn-primary">
-            <PlusIcon size={20} /> Add Hall
-          </button>
-        </div>
+        <h2 className="text-3xl font-bold text-white">Hall Management</h2>
+        <button
+          onClick={toggleAddForm}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+        >
+          {isAddFormVisible ? "Cancel" : "Add New Hall"}
+        </button>
       </div>
 
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="table w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
+      {isAddFormVisible && (
+        <div className="bg-gray-800 rounded-lg p-6 mb-6 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Hall Name"
+              value={hallName}
+              onChange={(e) => setHallName(e.target.value)}
+              className="bg-gray-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              placeholder="Capacity"
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
+              className="bg-gray-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="number"
+              placeholder="Price"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="bg-gray-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm text-gray-300 mb-2">
+              Select Movies
+            </label>
+            <select
+              onChange={handleMovieSelect}
+              value=""
+              className="bg-gray-700 text-white rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select a movie</option>
+              {movies
+                .filter((movie) => !selectedMovieIds.includes(movie._id))
+                .map((movie) => (
+                  <option key={movie._id} value={movie._id}>
+                    {movie.movie_name}
+                  </option>
                 ))}
-              </tr>
+            </select>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-4">
+            {selectedMovies.map((movie) => (
+              <span
+                key={movie._id}
+                className="inline-flex items-center gap-1 bg-gray-700 text-white px-3 py-1 rounded-full"
+              >
+                {movie.movie_name}
+                <button
+                  onClick={() => handleRemoveMovie(movie._id)}
+                  className="hover:text-red-500 focus:outline-none"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </span>
             ))}
+          </div>
+
+          <button
+            onClick={handleSaveHall}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+          >
+            {editingHallId ? "Update Hall" : "Save Hall"}
+          </button>
+        </div>
+      )}
+
+      <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <table className="w-full">
+          <thead>
+            <tr className="bg-gray-700">
+              <th className="p-4 text-left font-medium">Hall Name</th>
+              <th className="p-4 text-left font-medium">Capacity</th>
+              <th className="p-4 text-left font-medium">Price</th>
+              <th className="p-4 text-left font-medium">Movies</th>
+              <th className="p-4 text-left font-medium">Actions</th>
+            </tr>
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+            {halls.map((hall) => (
+              <tr
+                key={hall._id}
+                className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
+              >
+                <td className="p-4">{hall.hall_name}</td>
+                <td className="p-4">{hall.capacity}</td>
+                <td className="p-4">Rs. {hall.price}</td>
+                <td className="p-4">
+                  <div className="flex flex-wrap gap-2">
+                    {hall.movies && hall.movies.length > 0 ? (
+                      hall.movies.map((movie) => (
+                        <span
+                          key={movie._id}
+                          className="bg-gray-600 text-white px-3 py-1 rounded-full text-sm"
+                        >
+                          {movie.movie_name}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-400 text-sm">
+                        No movies assigned
+                      </span>
+                    )}
+                  </div>
+                </td>
+                <td className="p-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditHall(hall)}
+                      className="bg-gray-600 hover:bg-gray-500 text-white px-3 py-1 rounded-lg transition-colors duration-200"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteHall(hall._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-colors duration-200"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Pagination Controls */}
-      <div className="flex items-center justify-between mt-4">
-        <div className="flex items-center gap-2">
-          <button
-            className="btn btn-sm"
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
-          >
-            First
-          </button>
-          <button
-            className="btn btn-sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </button>
-          <button
-            className="btn btn-sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </button>
-          <button
-            className="btn btn-sm"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
-          >
-            Last
-          </button>
-        </div>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <select
-          className="select select-bordered select-sm"
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value));
-          }}
-        >
-          {[5, 10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-      {/* Add/Edit Modal */}
-      {isModalOpen && (
-        <div className="modal modal-open">
-          <div className="modal-box">
-            <div className="flex justify-between items-center">
-              <h3 className="font-bold text-lg">
-                {currentHall ? "Edit Hall" : "Add New Hall"}
-              </h3>
-              <FaTimes
-                className="text-xl cursor-pointer hover:text-red-600"
-                onClick={() => setIsModalOpen(false)}
-              />
-            </div>
-
-            <form
-              className="space-y-4 mt-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                const hallData = {
-                  _id: currentHall?._id, // Only include ID if editing
-                  hall_name: e.target.hall_name.value,
-                  capacity: e.target.capacity.value,
-                  price: e.target.price.value, // Added price
-                  rows: e.target.rows.value, // Added rows
-                  seats_per_row: e.target.seats_per_row.value, // Added seats_per_row
-                  movieId: e.target.movieId.value, // Assigned movie
-                };
-                handleSaveHall(hallData);
-              }}
-            >
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Hall Name</span>
-                </label>
-                <input
-                  type="text"
-                  name="hall_name"
-                  className="input input-bordered"
-                  defaultValue={currentHall?.hall_name}
-                  required
-                />
-              </div>
-
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Capacity</span>
-                </label>
-                <input
-                  type="number"
-                  name="capacity"
-                  className="input input-bordered"
-                  defaultValue={currentHall?.capacity}
-                  required
-                />
-              </div>
-
-              {/* Price Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Price</span>
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  className="input input-bordered"
-                  defaultValue={currentHall?.price}
-                  required
-                />
-              </div>
-
-              {/* Rows Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Rows</span>
-                </label>
-                <input
-                  type="number"
-                  name="rows"
-                  className="input input-bordered"
-                  defaultValue={currentHall?.rows}
-                  required
-                />
-              </div>
-
-              {/* Seats per row Field */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Seats per Row</span>
-                </label>
-                <input
-                  type="number"
-                  name="seats_per_row"
-                  className="input input-bordered"
-                  defaultValue={currentHall?.seats_per_row}
-                  required
-                />
-              </div>
-
-              {/* Movie Dropdown */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Movie</span>
-                </label>
-                <select
-                  name="movieId"
-                  className="select select-bordered"
-                  defaultValue={currentHall?.movieId}
-                >
-                  <option value="">Select Movie</option>
-                  {movies.map((movie) => (
-                    <option key={movie._id} value={movie._id}>
-                      {movie.movie_name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="modal-action">
-                <button type="submit" className="btn btn-primary">
-                  Save
-                </button>
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
-export default HallAdminPanel;
+export default AdminHallPanel;
