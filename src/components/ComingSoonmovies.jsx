@@ -86,7 +86,7 @@ const MovieCard = ({ movie, onClick }) => (
     className="bg-neutral-800 rounded-lg overflow-hidden transform transition-all duration-300 hover:bg-neutral-700 cursor-pointer group"
     onClick={onClick}
   >
-    <div className="relative aspect-[2/3] overflow-hidden">
+    <div className="relative aspect-[2.5/3] overflow-hidden">
       <img
         src={movie.poster}
         alt={movie.title}
