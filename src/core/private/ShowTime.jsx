@@ -1,315 +1,209 @@
 import axios from "axios";
-import { PlusIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { FaEdit, FaTimes, FaTrash } from "react-icons/fa";
-const ShowTime = () => {
-  const [halls, setHalls] = useState([]);
+import { useEffect, useState } from "react";
+
+export default function ShowTime() {
+  const [showtimes, setShowtimes] = useState([]);
   const [movies, setMovies] = useState([]);
-  const [showTimes, setShowTimes] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentShowTime, setCurrentShowTime] = useState(null);
-  const [globalFilter, setGlobalFilter] = useState("");
-
-  // Fetch movies from API
-  const fetchMovies = async () => {
-    try {
-      const response = await axios.get("http://localhost:4011/api/movie/get");
-      console.log("Movies fetched:", response.data); // Add this
-      setMovies(response.data);
-    } catch (error) {
-      console.error("Error fetching movies:", error);
-    }
-  };
-
-  // Fetch halls from API
-  const fetchHalls = async () => {
-    try {
-      const response = await axios.get("http://localhost:4011/api/hall/get");
-      setHalls(response.data);
-    } catch (error) {
-      console.error("Error fetching halls:", error);
-    }
-  };
-
-  // Fetch showtimes from API
-  const fetchShowTimes = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:4011/api/showTime/get"
-      );
-      const showTimesWithNames = response.data.map((showTime) => ({
-        ...showTime,
-        movie_name:
-          movies.find((movie) => movie._id === showTime.movieId)?.movie_name ||
-          "Unknown Movie",
-        hall_name:
-          halls.find((hall) => hall._id === showTime.hallId)?.hall_name ||
-          "Unknown Hall",
-      }));
-      setShowTimes(showTimesWithNames);
-    } catch (error) {
-      console.error(
-        "Error fetching showtimes:",
-        error.response || error.message
-      );
-    }
-  };
-
-  // Handle Save or Update
-  const handleSaveShowTime = async (showTime) => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        Authorization: `Bearer ${token}`,
-      };
-
-      if (showTime._id) {
-        // Update existing showtime
-        await axios.put(
-          `http://localhost:4011/api/showTime/${showTime._id}`,
-          showTime,
-          { headers }
-        );
-      } else {
-        // Create new showtime
-        await axios.post("http://localhost:4011/api/showTime/save", showTime, {
-          headers,
-        });
-      }
-      fetchShowTimes();
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error(
-        "Error saving showtime:",
-        error.response?.data || error.message
-      );
-      alert(
-        `Error: ${error.response?.data?.error || "Unable to save showtime"}`
-      );
-    }
-  };
-
-  // Handle Delete
-  const handleDeleteShowTime = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:4011/api/showTime/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchShowTimes();
-    } catch (error) {
-      console.error("Error deleting showtime:", error);
-      alert(
-        `Error: ${error.response?.data?.message || "Unable to delete showtime"}`
-      );
-    }
-  };
-
-  const handleAddShowTime = () => {
-    setCurrentShowTime(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEditShowTime = (showTime) => {
-    setCurrentShowTime(showTime);
-    setIsModalOpen(true);
-  };
+  const [halls, setHalls] = useState([]);
+  const [formData, setFormData] = useState({
+    movieId: "",
+    hallId: "",
+    start_time: "",
+    end_time: "",
+    date: "",
+  });
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    fetchHalls();
-    fetchMovies();
     fetchShowTimes();
+    fetchMovies();
+    fetchHalls();
   }, []);
 
-  // Filter showtimes based on globalFilter
-  const filteredShowTimes = showTimes.filter((showTime) =>
-    `${showTime.movie_name} ${showTime.hall_name} ${showTime.start_time} ${showTime.end_time}`
-      .toLowerCase()
-      .includes(globalFilter.toLowerCase())
-  );
+  const fetchShowTimes = async () => {
+    try {
+      const res = await axios.get("http://localhost:4011/api/showtime/");
+      setShowtimes(res.data);
+    } catch (err) {
+      console.error("Error fetching showtimes", err);
+    }
+  };
+
+  const fetchMovies = async () => {
+    try {
+      const res = await axios.get("http://localhost:4011/api/movie/");
+      setMovies(res.data);
+    } catch (err) {
+      console.error("Error fetching movies", err);
+    }
+  };
+
+  const fetchHalls = async () => {
+    try {
+      const res = await axios.get("http://localhost:4011/api/hall/");
+      setHalls(res.data);
+    } catch (err) {
+      console.error("Error fetching halls", err);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (editingId) {
+        await axios.put(
+          `http://localhost:4011/api/showtime/${editingId}`,
+          formData
+        );
+      } else {
+        await axios.post("http://localhost:4011/api/showtime/", formData);
+      }
+      fetchShowTimes();
+      setFormData({
+        movieId: "",
+        hallId: "",
+        start_time: "",
+        end_time: "",
+        date: "",
+      });
+      setEditingId(null);
+    } catch (err) {
+      console.error("Error saving showtime", err);
+    }
+  };
+
+  const handleEdit = (showtime) => {
+    setFormData({
+      movieId: showtime.movieId._id,
+      hallId: showtime.hallId._id,
+      start_time: showtime.start_time,
+      end_time: showtime.end_time,
+      date: showtime.date.split("T")[0],
+    });
+    setEditingId(showtime._id);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4011/api/showtime/${id}`);
+      fetchShowTimes();
+    } catch (err) {
+      console.error("Error deleting showtime", err);
+    }
+  };
 
   return (
-    <>
-      <div className="p-4 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-indigo-900">
-            Today's Schedule
-          </h2>
-          <div className="flex gap-4">
-            <input
-              type="text"
-              placeholder="Search movies..."
-              className="input input-bordered"
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-            />
-            <button onClick={handleAddShowTime} className="btn btn-primary">
-              <PlusIcon size={20} /> Add Showtime
-            </button>
-          </div>
-        </div>
-
-        {/* ShowTime Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredShowTimes.map((showTime) => (
-            <div
-              key={showTime._id}
-              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition relative"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-semibold text-indigo-900">
-                  {showTime.start_time} - {showTime.end_time}
-                </span>
-                <span className="text-sm text-black">{showTime.hall_name}</span>
-                <div className="flex gap-2">
-                  {/* Edit Icon */}
-                  <FaEdit
-                    className="text-blue-500 cursor-pointer hover:text-blue-700"
-                    onClick={() => handleEditShowTime(showTime)}
-                  />
-                  {/* Delete Icon */}
-                  <FaTrash
-                    className="text-red-500 cursor-pointer hover:text-red-700"
-                    onClick={() => handleDeleteShowTime(showTime._id)}
-                  />
-                </div>
-              </div>
-              <h3 className="text-lg font-medium mb-3">
-                {showTime.movie_name}
-              </h3>
-              <div className="flex justify-between items-center text-gray-600">
-                <span>Bookings</span>
-                <span className="font-medium">{showTime.bookings}</span>
-              </div>
-            </div>
+    <div className="p-6">
+      <h2 className="text-xl font-bold mb-4">Manage Showtimes</h2>
+      <form onSubmit={handleSubmit} className="space-y-4 border p-4 rounded">
+        {/* Movie Selection */}
+        <select
+          name="movieId"
+          value={formData.movieId}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select a Movie</option>
+          {movies.map((movie) => (
+            <option key={movie._id} value={movie._id}>
+              {movie.movie_name}
+            </option>
           ))}
-        </div>
+        </select>
 
-        {/* Modal for Add/Edit */}
-        {isModalOpen && (
-          <div className="modal modal-open">
-            <div className="modal-box">
-              <div className="flex justify-between items-center">
-                <h3 className="font-bold text-lg">
-                  {currentShowTime ? "Edit Showtime" : "Add New Showtime"}
-                </h3>
-                <FaTimes
-                  className="text-xl cursor-pointer hover:text-red-600"
-                  onClick={() => setIsModalOpen(false)}
-                />
-              </div>
+        {/* Hall Selection */}
+        <select
+          name="hallId"
+          value={formData.hallId}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        >
+          <option value="">Select a Hall</option>
+          {halls.map((hall) => (
+            <option key={hall._id} value={hall._id}>
+              {hall.hall_name}
+            </option>
+          ))}
+        </select>
 
-              <form
-                className="space-y-4 mt-4"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const showTimeData = {
-                    _id: currentShowTime?._id, // Include ID only for editing
-                    start_time: e.target.start_time.value,
-                    end_time: e.target.end_time.value,
-                    date: e.target.date.value,
-                    movieId: e.target.movieId.value,
-                    hallId: e.target.hallId.value,
-                  };
-                  handleSaveShowTime(showTimeData);
-                }}
-              >
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Start Time</span>
-                  </label>
-                  <input
-                    type="time"
-                    name="start_time"
-                    className="input input-bordered"
-                    defaultValue={currentShowTime?.start_time}
-                    required
-                  />
-                </div>
+        <input
+          type="time"
+          name="start_time"
+          value={formData.start_time}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+        <input
+          type="time"
+          name="end_time"
+          value={formData.end_time}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+        <input
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded w-full"
+        >
+          {editingId ? "Update" : "Add"} Showtime
+        </button>
+      </form>
 
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">End Time</span>
-                  </label>
-                  <input
-                    type="time"
-                    name="end_time"
-                    className="input input-bordered"
-                    defaultValue={currentShowTime?.end_time}
-                    required
-                  />
-                </div>
-
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Date</span>
-                  </label>
-                  <input
-                    type="date"
-                    name="date"
-                    className="input input-bordered"
-                    defaultValue={currentShowTime?.date}
-                    required
-                  />
-                </div>
-
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Movie</span>
-                  </label>
-                  <select
-                    name="movieId"
-                    className="select select-bordered"
-                    defaultValue={currentShowTime?.movieId || ""}
-                    required
-                  >
-                    <option value="">Select Movie</option>
-                    {movies.map((movie) => (
-                      <option key={movie._id} value={movie._id}>
-                        {movie.movie_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">Hall</span>
-                  </label>
-                  <select
-                    name="hallId"
-                    className="select select-bordered"
-                    defaultValue={currentShowTime?.hallId || ""}
-                    required
-                  >
-                    <option value="">Select Hall</option>
-                    {halls.map((hall) => (
-                      <option key={hall._id} value={hall._id}>
-                        {hall.hall_name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="modal-action">
-                  <button type="submit" className="btn btn-primary">
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="btn"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+      {/* Showtime Table */}
+      <table className="w-full mt-6 border">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="p-2">Movie</th>
+            <th className="p-2">Hall</th>
+            <th className="p-2">Start</th>
+            <th className="p-2">End</th>
+            <th className="p-2">Date</th>
+            <th className="p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {showtimes.map((showtime) => (
+            <tr key={showtime._id} className="border-t">
+              <td className="p-2">{showtime.movieId?.movie_name || "N/A"}</td>
+              <td className="p-2">{showtime.hallId?.hall_name || "N/A"}</td>
+              <td className="p-2">{showtime.start_time}</td>
+              <td className="p-2">{showtime.end_time}</td>
+              <td className="p-2">
+                {new Date(showtime.date).toLocaleDateString()}
+              </td>
+              <td className="p-2">
+                <button
+                  onClick={() => handleEdit(showtime)}
+                  className="bg-yellow-500 text-white p-1 rounded mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(showtime._id)}
+                  className="bg-red-500 text-white p-1 rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
-};
-
-export default ShowTime;
+}
