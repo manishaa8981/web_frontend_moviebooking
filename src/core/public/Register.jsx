@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Eye, EyeOff, Lock, Mail, Phone, User, X } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -62,8 +63,14 @@ const Register = () => {
       console.log("Response:", response.data);
 
       if (response.status === 201) {
-        toast.success("Registration successful!");
-        navigate("/login");
+        toast.success("Registration successful! Redirecting to login...", {
+          autoClose: 3000, // Wait 3 seconds before redirecting
+          position: "top-right",
+        });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 3000);
       }
     } catch (error) {
       if (!error.response) {

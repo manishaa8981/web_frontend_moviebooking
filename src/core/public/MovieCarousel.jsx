@@ -9,39 +9,39 @@ const MovieCarousel = () => {
   const movies = [
     {
       id: 1,
-      title: "Inception",
+      title: "Bool Bhuliya 3",
       description:
-        "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+        "A horror-comedy film where a conman posing as an exorcist, named Ruhaan, is called to a haunted palace believed to be tormented by the vengeful spirit of a dancer named Manjulika.",
       poster:
         "https://i.ytimg.com/vi/kN-ScVqz0wU/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLBoIH3PzxWTiyLEaMTSkMglTg5X5g",
       rating: 8.8,
       duration: "2h 28min",
-      releaseYear: "2010",
-      genre: "Sci-Fi, Action",
+      releaseYear: "2024",
+      genre: "Horror, Comedy",
     },
     {
       id: 2,
-      title: "The Dark Knight",
+      title: "Chavva",
       description:
-        "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+        "Chhaava is a 2025 Indian historical action film. It tells the story of Chhatrapati Sambhaji Maharaj, the second ruler of the Maratha Empire. The film stars Vicky Kaushal as Sambhaji, and was released in theaters on February 14, 2025",
       poster:
-        "https://i.ytimg.com/vi/tA1s65o_kYM/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCwUT4AWmKnWWbZmg6egFSm3NB1TA",
+        "https://images.moneycontrol.com/static-mcnews/2025/01/20250117063542_Chhava.jpg?impolicy=website&width=770&height=431",
       rating: 9.0,
       duration: "2h 32min",
-      releaseYear: "2008",
-      genre: "Action, Crime, Drama",
+      releaseYear: "2025",
+      genre: "Action, Crime, Hisstory",
     },
     {
       id: 3,
-      title: "Interstellar",
+      title: "Dhoom Dhaam",
       description:
-        "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+        "Dhoom Dhaam is no rom-com but a romantic thriller and crime drama with a twist. It is also a humor-laden look at what happens with arranged marriages in which couples really get to know each other only after their wedding, slowly and steadily, with surprises, pleasant or otherwise, coming up in the process!",
       poster:
-        "https://i.ytimg.com/vi/mXYQU9eHET4/hq720.jpg?sqp=-oaymwEnCNAFEJQDSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLChrgril1KugYQDrCVg5VpWKAfsgA",
+        "https://www.koimoi.com/wp-content/new-galleries/2025/02/dhoom-dhaam-movie-review-out-02.jpg",
       rating: 8.6,
       duration: "2h 49min",
-      releaseYear: "2014",
-      genre: "Adventure, Drama, Sci-Fi",
+      releaseYear: "2025",
+      genre: " Drama",
     },
   ];
 

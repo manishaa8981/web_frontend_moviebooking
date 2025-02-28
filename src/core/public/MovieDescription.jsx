@@ -39,7 +39,7 @@ const Button = ({
 }) => {
   const variants = {
     default: "bg-neutral-800 hover:bg-neutral-700 text-white",
-    primary: "bg-green-500 hover:bg-green-400 text-black",
+    primary: "bg-orange-400 hover:bg-green-400 text-black",
     danger: "bg-red-600 hover:bg-red-400 text-white",
   };
 
@@ -78,6 +78,9 @@ const MovieDescription = () => {
     fetchMovie();
   }, [id]);
 
+  const handleBooking = () => {
+    navigate(`/movie-booking/${id}`); // Use the id from params
+  };
   if (loading) {
     return (
       <div className="min-h-screen bg-neutral-900 flex items-center justify-center">
@@ -113,7 +116,37 @@ const MovieDescription = () => {
       </div>
     );
   }
+  // Add this function to convert regular YouTube URLs to embed URLs
+  const getEmbedUrl = (url) => {
+    if (!url) return "";
 
+    // Handle YouTube URLs
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      // Extract video ID
+      let videoId = "";
+      if (url.includes("youtube.com/watch?v=")) {
+        videoId = url.split("v=")[1];
+        // Handle additional parameters
+        const ampersandPosition = videoId.indexOf("&");
+        if (ampersandPosition !== -1) {
+          videoId = videoId.substring(0, ampersandPosition);
+        }
+      } else if (url.includes("youtu.be/")) {
+        videoId = url.split("youtu.be/")[1];
+      }
+
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    // Handle Vimeo URLs
+    if (url.includes("vimeo.com")) {
+      const vimeoId = url.split("vimeo.com/")[1];
+      return `https://player.vimeo.com/video/${vimeoId}`;
+    }
+
+    // Return original URL if it's already an embed URL or unknown format
+    return url;
+  };
   return (
     <>
       <Navbar />
@@ -163,15 +196,23 @@ const MovieDescription = () => {
 
               <div className="flex gap-4">
                 <Button
-                  variant="danger"
-                  onClick={() => setIsTrailerPlaying(true)}
+                  className="w-30 mt-6 p-3 bg-white hover:bg-white-500 text-white font-semibold rounded-lg flex items-center justify-center transition duration-300"
+                  onClick={() => {
+                    if (movie.trailer_url) {
+                      setIsTrailerPlaying(true);
+                    } else {
+                      // Show an error message or fallback
+                      alert("Trailer not available");
+                    }
+                  }}
+                  disabled={!movie.trailer_url}
                 >
                   <Play fill="currentColor" size={20} />
                   Watch Trailer
                 </Button>
                 <Button
-                  variant="primary"
-                  onClick={() => navigate("/movie-booking")}
+                  className="w-30 mt-6 p-3 bg-red-600 hover:bg-orange-500 text-white font-semibold rounded-lg flex items-center justify-center transition duration-300"
+                  onClick={handleBooking}
                 >
                   <Ticket size={20} />
                   Book Tickets
@@ -200,7 +241,6 @@ const MovieDescription = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-center gap-4">
                   <img
-                    src={movie.cast_image || "/api/placeholder/100/100"}
                     alt={movie.cast_name}
                     className="w-16 h-16 rounded-full object-cover"
                   />
@@ -227,10 +267,11 @@ const MovieDescription = () => {
                 Close
               </button>
               <iframe
-                src={movie.trailer_url}
+                src={getEmbedUrl(movie.trailer_url)}
                 className="w-full h-full rounded-lg"
                 allowFullScreen
                 title="Movie Trailer"
+                onError={(e) => console.error("Failed to load trailer", e)}
               />
             </div>
           </div>

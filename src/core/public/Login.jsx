@@ -1,7 +1,7 @@
 import axios from "axios"; // Import Axios
 import { Eye, EyeOff, Lock, UserRound, X } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../../components/NavBar";
@@ -60,19 +60,23 @@ const Login = () => {
       console.log("Response:", response.data);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
-      // localStorage.setItem("authToken", token);
-      toast.success("Login successful");
+
+      // Show success toast notification
+      toast.success("Login successful! Redirecting to homepage...");
+
       setIsAdminLoggedIn(true);
 
-      if (response.data.role === "admin") {
-        navigate("/admin"); // Navigates to an admin-specific route
-      } else {
-        navigate("/"); // Navigates to another route
-      }
+      // Redirect based on role after delay
+      setTimeout(() => {
+        if (response.data.role === "admin") {
+          navigate("/admin"); // Navigate to the admin dashboard
+        } else {
+          navigate("/"); // Navigate to the homepage
+        }
+      });
     } catch (error) {
       toast.error(
-        "Error:",
-        error.response ? error.response.data : error.message
+        error.response?.data?.message || "Login failed. Check credentials."
       );
       setErrorMessage(
         "Login failed. Please check your credentials and try again."
@@ -183,11 +187,17 @@ const Login = () => {
                 >
                   Login
                 </button>
+                <Link
+                  to={"/forgot-password"}
+                  className="flex justify-center text-gray-400 "
+                >
+                  <h1>Forgot password ?</h1>
+                </Link>
 
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <button
                     type="button"
-                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-neutral-500 transition-colors text-sm"
                   >
                     <img
                       src={GoogleIcon}
@@ -198,7 +208,7 @@ const Login = () => {
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-gray-600 transition-colors text-sm"
+                    className="flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded-lg hover:bg-neutral-500 transition-colors text-sm"
                   >
                     <img
                       src={FacebookIcon}

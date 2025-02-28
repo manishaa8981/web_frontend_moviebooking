@@ -1,19 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ComingSoon from "../../components/ComingSoonmovies";
+import Footer from "../../components/Footer";
 import MovieCard from "../../components/MovieCard";
 import Navbar from "../../components/NavBar";
 import MovieCarousel from "./MovieCarousel";
 
 const Home = () => {
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // Adjust the scroll threshold as needed
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     // <div className="min-h-screen bg-base-400">
     <div className="min-h-screen bg-neutral-900">
@@ -23,6 +15,7 @@ const Home = () => {
         <div className="container mx-auto px-4 py-6">
           <MovieCard />
           <ComingSoon />
+          <Footer />
         </div>
       </div>
     </div>

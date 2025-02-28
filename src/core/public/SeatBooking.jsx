@@ -115,26 +115,35 @@ const MovieBooking = () => {
   }, []);
 
   const handleCheckout = () => {
-    const token = localStorage.getItem("token"); // or however you store your auth token
+    const token = localStorage.getItem("token");
 
     if (!token) {
-      // Save booking data to localStorage before redirecting
-      const bookingData = {
-        movieId,
-        selectedDate,
-        selectedHall,
-        selectedSeats,
-        selectedShow,
-        returnPath: `/movie-booking/${movieId}`,
-      };
-      localStorage.setItem("pendingBooking", JSON.stringify(bookingData));
-
+      localStorage.setItem(
+        "pendingBooking",
+        JSON.stringify({
+          movieId,
+          selectedDate,
+          selectedHall,
+          selectedSeats,
+          selectedShow,
+          returnPath: `/movie-booking/${movieId}`,
+        })
+      );
       navigate("/login");
       return;
     }
 
-    // If token exists, proceed with booking
-    handleBooking();
+    // Redirect user to payment page before booking confirmation
+    navigate("/payment", {
+      state: {
+        movieId,
+        showtimeId: selectedShow._id,
+        seats: selectedSeats.map((seat) => seat._id),
+        totalAmount: calculateTotal(),
+        date: selectedDate,
+        hallId: selectedHall,
+      },
+    });
   };
 
   const handleBooking = async () => {
@@ -148,12 +157,14 @@ const MovieBooking = () => {
     try {
       const bookingData = {
         movieId,
-        showId: selectedShow._id,
+        showtimeId: selectedShow?._id, // Ensure selectedShow is not null
         seats: selectedSeats.map((seat) => seat._id),
         totalAmount: calculateTotal(),
         date: selectedDate,
         hallId: selectedHall,
       };
+
+      console.log("Booking Data:", bookingData); //  Debug API Payload
 
       const response = await axios.post(
         "http://localhost:4011/api/booking",
@@ -165,11 +176,13 @@ const MovieBooking = () => {
         }
       );
 
+      console.log("Booking Response:", response.data); //  Debug Response
+
       if (response.data) {
         navigate(`/booking-confirmation/${response.data._id}`);
       }
     } catch (error) {
-      console.error("Booking failed:", error);
+      console.error("Booking failed:", error.response?.data || error.message);
       alert("Failed to create booking. Please try again.");
     }
   };

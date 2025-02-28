@@ -25,6 +25,14 @@ const MovieCard = () => {
     fetchMovies();
   }, []);
 
+  // Function to handle direct navigation to booking page
+  const handleBookNow = (movieId, event) => {
+    // Stop event propagation to prevent navigating to movie details
+    event.stopPropagation();
+    // Navigate to booking page with the movie ID
+    navigate(`/movie-booking/${movieId}`);
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-[#121212] text-white">
@@ -47,77 +55,58 @@ const MovieCard = () => {
       {children}
     </span>
   );
-  return (
-    <div className="bg-neutral-900  ml-20 mr-20">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-white">Now Showing</h2>
-        <button
-          onClick={() => setShowAll(!showAll)}
-          className="text-[#1DB954] hover:underline font-medium"
-        >
-          {showAll ? "Show Less" : "See all"}
-        </button>
-      </div>
 
-      {/* Movies Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {displayedMovies.map((movie) => (
-          <div
-            key={movie.id}
-            onClick={() => navigate(`/movie/${movie._id}`)}
-            className="cursor-pointer transition-all duration-300 hover:scale-105"
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-black p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-bold text-white">Now Showing</h2>
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-[#1DB954] hover:underline font-medium"
           >
-            {/* Image Container */}
-            <div className="relative aspect-[2.5/3] rounded-t-md overflow-hidden shadow-lg">
-              <img
-                src={`http://localhost:4011/public/uploads/images/${movie.movie_image}`}
-                alt={movie.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            {showAll ? "Show Less" : "See all"}
+          </button>
+        </div>
+
+        {/* Movies Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {displayedMovies.map((movie) => (
+            <div
+              key={movie._id || movie.id}
+              onClick={() => navigate(`/movie/${movie._id || movie.id}`)}
+              className="bg-neutral-800 rounded-lg overflow-hidden transform transition-all duration-300 hover:bg-neutral-700 cursor-pointer group"
+            >
+              {/* Image Container */}
+              <div className="relative aspect-[2.5/3] overflow-hidden">
+                <img
+                  src={`http://localhost:4011/public/uploads/images/${movie.movie_image}`}
+                  alt={movie.movie_name}
+                  className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Content */}
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-white mb-2 truncate">
+                  {movie.movie_name}
+                </h3>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge>{movie.genre}</Badge>
+                  <Badge>{movie.language}</Badge>
+                  <Badge>{movie.rating}</Badge>
+                </div>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/movie/${movie._id}`);
-                  }}
-                  className="bg-[#1DB954] text-black rounded-full p-3 shadow-lg hover:scale-50 transition-transform"
+                  className="w-full mt-6 p-3 bg-orange-400 hover:bg-orange-500 text-white font-semibold rounded-lg flex items-center justify-center transition duration-300"
+                  onClick={(e) => handleBookNow(movie._id || movie.id, e)}
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  Book Now
                 </button>
               </div>
             </div>
-
-            {/* Content */}
-            <div className="space-y-1 bg-neutral-800 p-4 rounded-b-lg">
-              <h3 className="font-bold text-white truncate">
-                {movie.movie_name}
-              </h3>
-              <p className="text-sm font-bold text-white line-clamp-2 justify-between">
-                <Badge>{movie.genre} </Badge>• <Badge>{movie.language}</Badge>•
-                <Badge>{movie.rating}</Badge>
-              </p>
-              <div className="flex items-center gap-2">
-                {/* <span className="px-2 py-1 text-xs bg-[#282828] text-gray-300 rounded-full">
-                  {movie.status}
-                </span> */}
-              </div>
-              <button className="w-full bg-green-500 text-black py-2 rounded-full font-medium hover:bg-green-400 transition duration-300">
-                Book Now
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
