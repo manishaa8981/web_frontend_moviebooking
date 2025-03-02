@@ -240,15 +240,12 @@ const MovieDescription = () => {
               <h2 className="text-2xl font-semibold mb-4 text-white">Cast</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="flex items-center gap-4">
-                  <img
-                    alt={movie.cast_name}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
+                  
                   <div>
                     <h3 className="font-semibold text-white">
                       {movie.cast_name}
                     </h3>
-                    <p className="text-neutral-400">Actor</p>
+                    <p className="text-neutral-400">Actor </p>
                   </div>
                 </div>
               </div>

@@ -741,9 +741,11 @@ const SeatPanel = () => {
                       key={seat._id}
                       className="hover:bg-neutral-700/50 transition-colors"
                     >
-                      <td className="p-4">{getHallName(seat.hallId)}</td>
                       <td className="p-4">
-                        {getShowtimeName(seat.showtimeId)}
+                        {getHallName(seat.hallId.hall_name)}
+                      </td>
+                      <td className="p-4">
+                        {getShowtimeName(seat.showtimeId.start_time)}
                       </td>
                       <td className="p-4">{seat.seatName}</td>
                       <td className="p-4">

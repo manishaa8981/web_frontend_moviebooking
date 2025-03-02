@@ -9,7 +9,7 @@ const MovieCarousel = () => {
   const movies = [
     {
       id: 1,
-      title: "Bool Bhuliya 3",
+      title: "Bhool Bhuliya 3",
       description:
         "A horror-comedy film where a conman posing as an exorcist, named Ruhaan, is called to a haunted palace believed to be tormented by the vengeful spirit of a dancer named Manjulika.",
       poster:

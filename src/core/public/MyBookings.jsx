@@ -32,10 +32,10 @@ const MyBookings = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen  bg-neutral-800 pt-28 pb-10">
+      <div className="min-h-screen  bg-neutral-800 pt-20 ">
         <div className="max-w-5xl mx-auto px-6">
-          <h2 className="text-3xl font-extrabold text-white text-center mb-8">
-            🎟️ My Movie Bookings
+          <h2 className="text-4xl font-extrabold text-orange-400 text-center">
+            My Movie Bookings
           </h2>
 
           {bookings.length === 0 ? (

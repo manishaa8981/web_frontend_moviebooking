@@ -7,6 +7,8 @@ import {
   Sofa,
   TicketIcon,
 } from "lucide-react";
+import { toast, ToastContainer } from "react-toastify";
+
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/NavBar";
@@ -216,6 +218,8 @@ const MovieBooking = () => {
   };
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-900 to-black">
+      <ToastContainer />
+
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 py-8 mt-10">
@@ -398,13 +402,15 @@ const MovieBooking = () => {
                       <div className="flex justify-between">
                         <span className="text-neutral-400">Duration</span>
                         <span className="text-white">
-                          {selectedShow.movieId.duration}
+                          {/* {selectedShow.movieId.duration} */}
+                          <p>2hr 30mins</p>
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-neutral-400">Genre</span>
                         <span className="text-white">
-                          {selectedShow.movieId.genre}
+                          {/* {selectedShow.movieId.genre} */}
+                          <p>Horror Comdey</p>
                         </span>
                       </div>
                     </div>
@@ -441,9 +447,44 @@ const MovieBooking = () => {
                           </span>
                         </div>
                       </div>
-
                       <button
-                        onClick={handleCheckout}
+                        onClick={() => {
+                          const token = localStorage.getItem("token");
+
+                          if (!token) {
+                            // Store booking details before redirecting
+                            localStorage.setItem(
+                              "pendingBooking",
+                              JSON.stringify({
+                                movieId,
+                                selectedDate,
+                                selectedHall,
+                                selectedSeats,
+                                selectedShow,
+                                returnPath: `/movie-booking/${movieId}`,
+                              })
+                            );
+
+                            // Show toast notification and redirect after delay
+                            toast.warning("You need to log in first!", {
+                              autoClose: 2000, // Toast visible for 2 seconds
+                              onClose: () => navigate("/login"), // Redirect after toast closes
+                            });
+                            return;
+                          }
+
+                          // Proceed to Payment if user is authenticated
+                          navigate("/payment", {
+                            state: {
+                              movieId,
+                              showtimeId: selectedShow._id,
+                              seats: selectedSeats.map((seat) => seat._id),
+                              totalAmount: calculateTotal(),
+                              date: selectedDate,
+                              hallId: selectedHall,
+                            },
+                          });
+                        }}
                         className="w-full py-3 bg-green-500 text-black rounded-lg font-semibold hover:bg-green-600 transition-colors"
                       >
                         Proceed to Payment

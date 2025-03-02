@@ -18,11 +18,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
-  const { setIsAdminLoggedIn } = useContext(AdminLoginContext); // Access the admin login state
+  const { setIsAdminLoggedIn } = useContext(AdminLoginContext);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50); // Adjust the scroll threshold as needed
+      setIsScrolled(window.scrollY > 50);
     };
 
     const debounce = (func, delay) => {
@@ -40,47 +40,43 @@ const Login = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    setErrorMessage(""); // Reset error message
+    e.preventDefault();
+    setErrorMessage("");
 
     if (!username || !password) {
       setErrorMessage("Username and Password are required");
+      toast.error("Username and Password are required");
       return;
     }
 
     try {
       const response = await axios.post(
-        `http://localhost:4011/api/auth/login`,
-        {
-          username,
-          password,
-        }
+        "http://localhost:4011/api/auth/login",
+        { username, password }
       );
 
       console.log("Response:", response.data);
+
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("role", response.data.role);
 
-      // Show success toast notification
-      toast.success("Login successful! Redirecting to homepage...");
+      if (response.data.customerId) {
+        localStorage.setItem("customerId", response.data.customerId);
+      } else {
+        console.error("Customer ID missing in response");
+      }
 
+      toast.success("Login successful! Redirecting...");
       setIsAdminLoggedIn(true);
 
-      // Redirect based on role after delay
       setTimeout(() => {
-        if (response.data.role === "admin") {
-          navigate("/admin"); // Navigate to the admin dashboard
-        } else {
-          navigate("/"); // Navigate to the homepage
-        }
-      });
+        navigate(response.data.role === "admin" ? "/admin" : "/");
+      }, 1000);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Login failed. Check credentials."
-      );
-      setErrorMessage(
-        "Login failed. Please check your credentials and try again."
-      );
+      const errMsg =
+        error.response?.data?.message || "Login failed. Check credentials.";
+      toast.error(errMsg);
+      setErrorMessage(errMsg);
     }
   };
 
@@ -99,7 +95,7 @@ const Login = () => {
         </div>
         <div className="w-full md:w-[50%] flex items-center justify-center p-6 relative">
           <button
-            onClick={() => navigate("/")} // Navigate to home page
+            onClick={() => navigate("/")}
             className="absolute top-20 right-4 text-gray-400 hover:text-gray-300 transition-colors"
             aria-label="Close"
           >
@@ -182,6 +178,7 @@ const Login = () => {
                 </div>
 
                 <button
+                  onClick={() => navigate("/")}
                   type="submit"
                   className="w-full bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-amber-600 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
@@ -220,7 +217,6 @@ const Login = () => {
                 </div>
               </form>
 
-              {/* Sign Up Link */}
               <p className="mt-6 text-center text-m font-medium text-gray-400">
                 Don't have an account?{" "}
                 <button

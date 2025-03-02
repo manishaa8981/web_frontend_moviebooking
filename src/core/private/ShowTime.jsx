@@ -238,17 +238,32 @@ export default function ShowTime() {
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm text-neutral-300">
-                    Start time
+                    Start Time
                   </label>
                   <input
                     type="time"
-                    name="start_time"
+                    name="start_time" // ✅ Correct
                     value={formData.start_time}
                     onChange={handleChange}
                     className="w-full p-3 bg-zinc-700 text-white rounded-md block text-sm bg-neutral-700 text-white"
                     required
                   />
                 </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm text-neutral-300">
+                    End Time
+                  </label>
+                  <input
+                    type="time"
+                    name="end_time" // ✅ Fix: Use correct "end_time" name
+                    value={formData.end_time} // ✅ Fix: Use correct value
+                    onChange={handleChange} // ✅ Fix: Use correct event handler
+                    className="w-full p-3 bg-zinc-700 text-white rounded-md block text-sm bg-neutral-700 text-white"
+                    required
+                  />
+                </div>
+
                 <input
                   type="date"
                   name="date"
@@ -257,7 +272,6 @@ export default function ShowTime() {
                   className="w-full p-3 bg-zinc-700 text-white rounded-md block text-sm bg-neutral-700 text-white"
                   required
                 />
-
                 <button
                   type="submit"
                   className="w-full p-3 bg-green-500 hover:bg-green-600 text-white rounded-md"

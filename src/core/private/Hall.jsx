@@ -249,6 +249,44 @@ const AdminHallPanel = () => {
                     required
                   />
                 </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-300 mb-2">
+                    Select Movies
+                  </label>
+                  <select
+                    onChange={handleMovieSelect}
+                    value=""
+                    className="w-full  bg-neutral-600 p-3 bg-zinc-700 text-white rounded-md block text-sm text-white"
+                  >
+                    <option value="">Select a movie</option>
+                    {movies
+                      .filter((movie) => !selectedMovieIds.includes(movie._id))
+                      .map((movie) => (
+                        <option key={movie._id} value={movie._id}>
+                          {movie.movie_name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {selectedMovies.map((movie) => (
+                    <span
+                      key={movie._id}
+                      className="w-full  bg-neutral-600 p-3 bg-zinc-700 text-white rounded-md block text-sm text-white"
+                    >
+                      {movie.movie_name}
+                      <button
+                        onClick={() => handleRemoveMovie(movie._id)}
+                        className="hover:text-red-500 focus:outline-none"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+
                 <div className="space-y-2 mt-4">
                   <button
                     onClick={handleSaveHall}

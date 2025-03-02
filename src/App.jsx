@@ -1,6 +1,8 @@
 import { lazy, Suspense, useContext } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MovieCard from "./components/MovieCard";
+import Profile from "./components/Profile";
+import StripeProvider from "./components/StripeProvider";
 import { AdminLoginContext } from "./context/AdminLoginContext";
 import ForgotPassword from "./core/public/ForgotPassword";
 import MovieBooking from "./core/public/MovieBooking";
@@ -108,6 +110,14 @@ function App() {
       ),
     },
     {
+      path: "/profile",
+      element: (
+        <Suspense>
+          <Profile />
+        </Suspense>
+      ),
+    },
+    {
       path: "/forgot-password",
       element: (
         <Suspense>
@@ -200,7 +210,13 @@ function App() {
   // Conditionally use private routes or public routes
   const routes = isAdminLoggedIn ? privateRoutes : publicRoutes;
 
-  return <RouterProvider router={createBrowserRouter(routes)} />;
+  return (
+    <StripeProvider>
+      {" "}
+      {/* Wrap RouterProvider inside StripeProvider */}
+      <RouterProvider router={createBrowserRouter(routes)} />
+    </StripeProvider>
+  );
 }
 
 export default App;
