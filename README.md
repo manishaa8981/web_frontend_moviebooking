@@ -1,4 +1,5 @@
 🎬 Movie Ticket Booking Application 🎟️
+
 📌 Overview
 This Movie Ticket Booking Application is a full-stack web application that allows users to browse movies, select showtimes, book seats, and make payments securely using Stripe. The system includes user authentication, an admin panel for managing movies, halls, and showtimes, and a dashboard for analytics.
 
